@@ -1,0 +1,12 @@
+"seconds" 0 a 59
+"minutes" 0 a 59
+"hours"	0 a 23
+"mday" 1 a 31
+"wday" 0 (para Domingo) hasta 6 (para Sábado)
+"mon" 1 hasta 12
+"year"	4 dígitos	Ejemplos: 1999 o 2003
+"yday"	0 hasta 365
+"weekday" Sunday hasta Saturday
+"month"	January o March	January hasta December
+0	Los segundos desde la Época Unix, similar a los valores devueltos por time() y usados por date().	
+    Dependiente del Sistema, típicamente -2147483648 hasta 2147483647.

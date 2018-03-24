@@ -1,0 +1,4 @@
+este es un archivo en el que
+va a coger letra a letra Y Va
+a MOSTRAR en una Tabla El porcentaje
+de cada letrA.

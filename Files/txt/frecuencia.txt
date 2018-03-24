@@ -1,0 +1,5 @@
+Esto es una achivo 
+de prueba, para comprobar
+si hacemos la tabla de frecuencia
+de aparicion de los caractares de un
+archivo

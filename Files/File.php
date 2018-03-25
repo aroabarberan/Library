@@ -43,6 +43,19 @@ class File
         $content = File::readFile($file);
         return $content[count($content) - 1];
     }
+    
+    public static function readFileEnv($txt)
+    {
+        $file = fopen($txt, 'r');
+        $datas = [];
+        while (!feof($file)) {
+            $line = fgets($file);
+            $fields = explode('=', trim($line));
+            $datas[$fields[0]] = $fields[1];
+        }
+        fclose($file);
+        return $datas;
+    }
 
     public static function writeLineFile($file, $content)
     {
@@ -78,7 +91,6 @@ class File
         while (!feof($f)) {
             $line = fgets($f);
             $campo = explode(" ", rtrim($line));
-
 
             foreach ($campo as $valor) {
                 if (!strcasecmp($word, $valor)) {

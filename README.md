@@ -2,7 +2,7 @@
 
 Small php library.
 
-PDO and mysqli database connection.<br>
+PDO database connection.<br>
 Interfaces.<br>
 Files.<br>
 Dates.<br>

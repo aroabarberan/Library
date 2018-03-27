@@ -6,7 +6,7 @@ interface DB
 
     // function read();
 
-    function readAll();
+    function readAll($table);
 
     // function update();
 

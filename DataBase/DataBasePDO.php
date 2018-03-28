@@ -8,7 +8,7 @@ require_once '../Files/File.php';
 class DataBasePDO implements DB
 {
     private $link;
-    public $data;
+    public $table;
 
     public function __construct()
     {
@@ -32,27 +32,36 @@ class DataBasePDO implements DB
         }
     }
 
-    public function readAll($table)
+    public function read($idTable, $id)
     {
-        return $this->link->query("SELECT * FROM $table");
+        return $this->query("SELECT * FROM $this->table WHERE $idTable='$id'");
+    }
+
+    public function readAll()
+    {
+        return $this->query("SELECT * FROM $this->table");
     }
 
     public function query($query, $params = [])
     {
-        $row = [];
-        $statement = $this->link->prepare($query);
-        if ($statement->execute($params)) {
-            while ($row = $statement->fetch()) {
-                $this->data[] = $row;
-            }
-        } else {
-            echo "Error ";
-        }        
+        $data = [];
+        $result = $this->link->prepare($query);
+        $success = $result->execute($params);
+        if (!$success) {
+            echo "Error Query.  ";
+            return false;
+        }
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        return $data;
+    }
+    public function setTable($table)
+    {
+        $this->table = $table;
     }
 }
 
 $bla = new DataBasePDO();
-$bla->readAll("coches");
-
-echo "<pre>" . print_r($bla->readAll("coches"), true) . "</pre>";
-echo "<pre>" . print_r($this->data, true) . "</pre>";
+$bla->setTable('usuarios');
+echo "<pre>" . print_r($bla->read('Usuario', 'pepe'), true) . "</pre>";

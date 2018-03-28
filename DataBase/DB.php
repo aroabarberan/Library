@@ -4,9 +4,9 @@ interface DB
 {
     // function insert();
 
-    // function read();
+    function read($idTable, $id);
 
-    function readAll($table);
+    function readAll();
 
     // function update();
 

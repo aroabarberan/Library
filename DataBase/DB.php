@@ -2,7 +2,7 @@
 
 interface DB
 {
-    // function insert();
+    function insert($stringFields, $arrayParams);
 
     function read($idTable, $id);
 

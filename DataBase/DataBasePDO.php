@@ -31,6 +31,15 @@ class DataBasePDO implements DB
             exit();
         }
     }
+    public function insert($stringFields, $arrayParams)
+    {
+        // $query = "INSERT INTO $this->table ($stringFields) VALUES(";
+        // for ($i = 0; $i < count($arrayFields); $i++) {
+        //     $query .= ":"; 
+        // }
+        // // return $this->query("INSERT INTO $this->table VALUES ()", $params);
+        // $query .= ")";
+    }
 
     public function read($idTable, $id)
     {
@@ -48,7 +57,7 @@ class DataBasePDO implements DB
         $result = $this->link->prepare($query);
         $success = $result->execute($params);
         if (!$success) {
-            echo "Error Query.  ";
+            echo "Error Query." . $result->errorInfo();
             return false;
         }
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -64,4 +73,5 @@ class DataBasePDO implements DB
 
 $bla = new DataBasePDO();
 $bla->setTable('usuarios');
-echo "<pre>" . print_r($bla->read('Usuario', 'pepe'), true) . "</pre>";
+$bla->insert('Usuario, Clave', ['aroa', 'aroa']);
+echo "<pre>" . print_r($bla->readAll(), true) . "</pre>";

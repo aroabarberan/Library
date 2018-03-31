@@ -31,33 +31,42 @@ class DataBasePDO implements DB
             exit();
         }
     }
+    //TODO
     public function insert($stringFields, $arrayParams)
     {
-        // $query = "INSERT INTO $this->table ($stringFields) VALUES(";
-        // for ($i = 0; $i < count($arrayFields); $i++) {
-        //     $query .= ":"; 
-        // }
-        // // return $this->query("INSERT INTO $this->table VALUES ()", $params);
-        // $query .= ")";
+        $query = "INSERT INTO $this->table ($stringFields) VALUES(";
+        for ($i = 0; $i < count($arrayFields); $i++) {
+            $query .= ":";
+        }
+        // return $this->query("INSERT INTO $this->table VALUES ()", $params);
+        $query .= ")";
     }
 
-    public function read($idTable, $id)
+    public function read($idTable, $value)
     {
-        return $this->query("SELECT * FROM $this->table WHERE $idTable='$id'");
+        return $this->query("SELECT * FROM $this->table WHERE $idTable='$value'");
     }
 
     public function readAll()
     {
         return $this->query("SELECT * FROM $this->table");
     }
+    //TODO
+    public function remove($idTable, $value)
+    {
+        $query = "DELETE FROM $this->table WHERE $idTable=':$idTable'";
+        $params = [":$idTable" => "$value"];
+        return $this->query($query, $params);
+    }
 
     public function query($query, $params = [])
     {
         $data = [];
         $result = $this->link->prepare($query);
+        
         $success = $result->execute($params);
         if (!$success) {
-            echo "Error Query." . $result->errorInfo();
+            echo "Error Query -> " . $result->errorInfo();
             return false;
         }
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -73,5 +82,6 @@ class DataBasePDO implements DB
 
 $bla = new DataBasePDO();
 $bla->setTable('usuarios');
-$bla->insert('Usuario, Clave', ['aroa', 'aroa']);
+// $bla->insert('Usuario, Clave', ['aroa', 'aroa']);
+$bla->remove('Usuario', 'aroa');
 echo "<pre>" . print_r($bla->readAll(), true) . "</pre>";

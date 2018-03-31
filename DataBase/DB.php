@@ -4,12 +4,12 @@ interface DB
 {
     function insert($stringFields, $arrayParams);
 
-    function read($idTable, $id);
+    function read($idTable, $value);
 
     function readAll();
 
     // function update();
 
-    // function remove();
+    function remove($idTable, $values);
 
 }

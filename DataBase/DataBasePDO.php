@@ -51,11 +51,11 @@ class DataBasePDO implements DB
     {
         return $this->query("SELECT * FROM $this->table");
     }
-    //TODO
+    
     public function remove($idTable, $value)
     {
-        $query = "DELETE FROM $this->table WHERE $idTable=':$idTable'";
-        $params = [":$idTable" => "$value"];
+        $query = "DELETE FROM $this->table WHERE $idTable=:" . $idTable;
+        $params = [":$idTable" => $value];
         return $this->query($query, $params);
     }
 

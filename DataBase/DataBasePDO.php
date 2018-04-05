@@ -34,12 +34,20 @@ class DataBasePDO implements DB
     //TODO
     public function insert($stringFields, $arrayParams)
     {
-        $query = "INSERT INTO $this->table ($stringFields) VALUES(";
-        for ($i = 0; $i < count($arrayFields); $i++) {
-            $query .= ":";
+        $intercambio = array_flip($arrayParams);
+        $query = "INSERT INTO $this->table ($stringFields) VALUES (";
+
+        for ($i = 0; $i < count($arrayParams); $i++) {
+            if ($i == count($arrayParams) - 1) {
+                $query .= ":" . $arrayParams[$i];
+            } else {
+                $query .= ":" . $arrayParams[$i] . ", ";
+            }
+            $intercambio[$arrayParams[$i]] = $arrayParams[$i];
+            $params[":" . $intercambio[$arrayParams[$i]]] = $arrayParams[$i];
         }
-        // return $this->query("INSERT INTO $this->table VALUES ()", $params);
         $query .= ")";
+        $this->query($query, $params);
     }
 
     public function read($idTable, $value)
@@ -51,11 +59,12 @@ class DataBasePDO implements DB
     {
         return $this->query("SELECT * FROM $this->table");
     }
-    
+
     public function remove($idTable, $value)
     {
         $query = "DELETE FROM $this->table WHERE $idTable=:" . $idTable;
         $params = [":$idTable" => $value];
+
         return $this->query($query, $params);
     }
 
@@ -63,7 +72,7 @@ class DataBasePDO implements DB
     {
         $data = [];
         $result = $this->link->prepare($query);
-        
+
         $success = $result->execute($params);
         if (!$success) {
             echo "Error Query -> " . $result->errorInfo();
@@ -79,9 +88,3 @@ class DataBasePDO implements DB
         $this->table = $table;
     }
 }
-
-$bla = new DataBasePDO();
-$bla->setTable('usuarios');
-// $bla->insert('Usuario, Clave', ['aroa', 'aroa']);
-$bla->remove('Usuario', 'aroa');
-echo "<pre>" . print_r($bla->readAll(), true) . "</pre>";

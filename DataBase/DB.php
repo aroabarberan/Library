@@ -8,7 +8,7 @@ interface DB
 
     function readAll();
 
-    // function update();
+    function update($arrayFiels, $arrayParams);
 
     function remove($idTable, $values);
 

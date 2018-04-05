@@ -34,7 +34,7 @@ class DataBasePDO implements DB
     //TODO
     public function insert($stringFields, $arrayParams)
     {
-        $intercambio = array_flip($arrayParams);
+        $params = array_flip($arrayParams);
         $query = "INSERT INTO $this->table ($stringFields) VALUES (";
 
         for ($i = 0; $i < count($arrayParams); $i++) {
@@ -43,8 +43,7 @@ class DataBasePDO implements DB
             } else {
                 $query .= ":" . $arrayParams[$i] . ", ";
             }
-            $intercambio[$arrayParams[$i]] = $arrayParams[$i];
-            $params[":" . $intercambio[$arrayParams[$i]]] = $arrayParams[$i];
+            $params[$arrayParams[$i]] = $arrayParams[$i];
         }
         $query .= ")";
         $this->query($query, $params);
@@ -60,6 +59,26 @@ class DataBasePDO implements DB
         return $this->query("SELECT * FROM $this->table");
     }
 
+    public function update($arrayFiels, $arrayParams)
+    {
+        $query = "UPDATE $this->table SET ";
+        // NIF = :nif, Nombre = :nombre, Apellido1 = :apellido1, Apellido2 = :apellido2,
+        // Imagen = :imagen, Tipo = :tipo
+        // WHERE NIF = :nif";
+        $params = array_flip($arrayParams);
+
+        for ($i = 0; $i < count($arrayParams); $i++) {
+            if ($i == count($arrayParams) - 1) {
+                $query .= $arrayFiels[$i] . " = :" . $arrayParams[$i];
+            } else {
+                $query .= $arrayFiels[$i] . " = :" . $arrayParams[$i] . ", ";
+            }
+            $params[$arrayParams[$i]] = $arrayParams[$i];
+        }
+        $query .= " WHERE $arrayFiels[0]='$arrayParams[0]'";
+        $this->query($query, $params);
+    }
+    
     public function remove($idTable, $value)
     {
         $query = "DELETE FROM $this->table WHERE $idTable=:" . $idTable;
@@ -75,7 +94,7 @@ class DataBasePDO implements DB
 
         $success = $result->execute($params);
         if (!$success) {
-            echo "Error Query -> " . $result->errorInfo();
+            echo "<br>Error Query -> " . $result->errorInfo();
             return false;
         }
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

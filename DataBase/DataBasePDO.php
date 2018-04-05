@@ -62,9 +62,6 @@ class DataBasePDO implements DB
     public function update($arrayFiels, $arrayParams)
     {
         $query = "UPDATE $this->table SET ";
-        // NIF = :nif, Nombre = :nombre, Apellido1 = :apellido1, Apellido2 = :apellido2,
-        // Imagen = :imagen, Tipo = :tipo
-        // WHERE NIF = :nif";
         $params = array_flip($arrayParams);
 
         for ($i = 0; $i < count($arrayParams); $i++) {
@@ -78,7 +75,7 @@ class DataBasePDO implements DB
         $query .= " WHERE $arrayFiels[0]='$arrayParams[0]'";
         $this->query($query, $params);
     }
-    
+
     public function remove($idTable, $value)
     {
         $query = "DELETE FROM $this->table WHERE $idTable=:" . $idTable;

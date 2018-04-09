@@ -42,5 +42,8 @@ Small php library.
   ```
 > Images.<br>
   ```
-  
+    - write on images.
+    - draw lines on images.
+    - create captchas.
+    .....
   ```

@@ -2,9 +2,9 @@
 
 require_once 'DataBasePDO.php';
 
-$DB = new DataBasePDO();
-$DB->setTable('usuarios');
-// $DB->insert('Usuario, Clave', ['aroa', 'claveAroa']);
-$DB->update(['Usuario', 'Clave'], ['aroa', 'claveModificado']);
-// $DB->remove('Usuario', 'aroa');
-echo "<pre>" . print_r($DB->readAll(), true) . "</pre>";
+$db = new DataBasePDO();
+$db->setTable('usuarios');
+// $db->insert('Usuario, Clave', ['aroa', 'claveAroa']);
+$db->update(['Usuario', 'Clave'], ['aroa', 'claveModificado']);
+// $db->remove('Usuario', 'aroa');
+echo "<pre>" . print_r($db->readAll(), true) . "</pre>";

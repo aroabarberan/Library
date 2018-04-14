@@ -2,8 +2,10 @@
 ini_set(‘display_errors’, ‘On’);
 error_reporting(E_ALL);
 
-require_once 'DB.php';
-require_once '../Files/File.php';
+include_once(dirname(__FILE__) . '/DB.php'); 
+include_once(dirname(__FILE__) . '/../Files/File.php'); 
+
+
 
 class DataBasePDO implements DB
 {
@@ -31,7 +33,7 @@ class DataBasePDO implements DB
             exit();
         }
     }
-    //TODO
+
     public function insert($stringFields, $arrayParams)
     {
         $params = array_flip($arrayParams);

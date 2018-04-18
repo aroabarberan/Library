@@ -2,10 +2,8 @@
 ini_set(‘display_errors’, ‘On’);
 error_reporting(E_ALL);
 
-include_once(dirname(__FILE__) . '/DB.php'); 
-include_once(dirname(__FILE__) . '/../Files/File.php'); 
-
-
+include(dirname(__FILE__) . '/DB.php'); 
+include(dirname(__FILE__) . '/../Files/File.php'); 
 
 class DataBasePDO implements DB
 {
@@ -14,7 +12,7 @@ class DataBasePDO implements DB
 
     public function __construct()
     {
-        $this->data = File::readFileEnv('.env');
+        $this->data = File::readFileEnv(dirname(__FILE__) . '/.env');
         return $this->connect();
     }
     private function connect()

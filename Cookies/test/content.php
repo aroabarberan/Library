@@ -1,10 +1,10 @@
 <?php
 
-include(dirname(__FILE__) . '/../Cookie.php');
+include dirname(__FILE__) . '/../Cookie.php';
 
-// if (!isExists('users')) {
-//     header("location:index.php");
-// }
+if (!Cookie::isExists('user')) {
+    header("location:index.php");
+}
 ?>
 
 <!DOCTYPE html>

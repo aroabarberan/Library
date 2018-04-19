@@ -1,11 +1,10 @@
 <?php
 
-include(dirname(__FILE__) . '/../Cookie.php');
+include dirname(__FILE__) . '/../Cookie.php';
 
-
-// if (isExists('users')) {
-//     header("location:content.html");
-// }
+if (Cookie::isExists('user')) {
+    header("location:content.php");
+}
 ?>
 <form action="login.php" method="POST">
     <div id="login">

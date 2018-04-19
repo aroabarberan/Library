@@ -1,8 +1,10 @@
 <?php
-require_once '../functionsCookies.php';
-if (!isExists('users')) {
-    header("location:index.php");
-}
+
+include(dirname(__FILE__) . '/../Cookie.php');
+
+// if (!isExists('users')) {
+//     header("location:index.php");
+// }
 ?>
 
 <!DOCTYPE html>

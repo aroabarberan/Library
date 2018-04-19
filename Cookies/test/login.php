@@ -1,34 +1,29 @@
 <?php
-ini_set(‘display_errors’, ‘On’);
-error_reporting(E_ALL);
 
-require_once '../functionsCookies.php';
-require_once '../../DataBase/DataBasePDO.php';
+include dirname(__FILE__) . '/../Cookie.php';
+include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
 
-// $db = new DataBasePDO();
-// $db->setTable('usuarios');
-// echo "<pre>" . print_r($db->readAll(), true) . "</pre>";
-
-$users = array(
-    '0' => array('name' => 'aroa', 'password' => '1111'),
-    '1' => array('name' => 'ivan', 'password' => '2222'),
-    '2' => array('name' => 'pepito', 'password' => '3333'),
-    '3' => array('name' => 'menganito', 'password' => '4444'),
-);
+$db = new DataBasePDO();
+$db->setTable('usuarios');
+$users = $db->readAll();
+echo "<pre>" . print_r($users, true) . "</pre>";
 
 if (!empty($_POST['userName'])) {
+
     $userName = $_POST['userName'];
     $password = $_POST['password'];
+    // $db->insert('Usuario, Clave', [$userName, $password]);
 
-    if (isExists($userName)) {
-        header("location:content.php");
-    }
+}
+//     if (isExists($userName)) {
+//         header("location:content.php");
+//     }
 
-    if (islogin($users, $userName, $password)) {
-        setcookie($userLogin, $userName, time() + 3600);
-        header("location:content.php");
-    } else {
-        header("location:login.php");
-    }
+if (Cookie::islogin($users, $userName, $password)) {
+    Cookie::create($userName);
+    // setcookie($userLogin, $userName, time() + 3600);
+    header("location:content.php");
+} else {
+    header("location:login.php");
 }
 

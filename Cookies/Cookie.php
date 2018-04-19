@@ -5,13 +5,43 @@ class Cookie
     public $name;
     public $value;
     public $exdays;
-
+    public $userLogin = 'user';
 
     public function __construct($name, $value, $exdays = 1)
     {
         $this->name = $name;
         $this->value = $value;
-        $this->exdaya = $exdays;
+        $this->exdays = $exdays;
+        setcookie($this->name, $this->value, $this->exdays);
+    }
+    public static function create($value)
+    {
+        setcookie($this->userLogin, $value, time() + 3600);
+    }
+
+    public static function delete()
+    {
+        setcookie($this->userLogin, "", time() - 3600);
+    }
+
+    public static function islogin($users, $userName, $password)
+    {
+        for ($i = 0; $i < count($users); $i++) {
+            if ($userName == $users[$i]['Usuario'] && $password == $users[$i]['Clave']) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function isExists($userName)
+    {
+//    if (!isset($_COOKIE[$userName])) {
+        //        echo "Cookie named '" . $userName . "' is not set!";
+        //    } else {
+        //        echo "Cookie '" . $userName . "' is set!<br>";
+        //    }
+        return isset($_COOKIE[$userName]);
     }
 
     public function getName()
@@ -34,26 +64,13 @@ class Cookie
         $this->value = $value;
     }
 
-    public function getExdaya()
-    {
-        return $this->exdaya;
-    }
-
-    public function setExdaya($exdaya)
-    {
-        $this->exdaya = $exdaya;
-    }
-
     public function getExdays()
     {
         return $this->exdays;
     }
+
     public function setExdays($exdays)
     {
         $this->exdays = $exdays;
-    }
-
-    public function delete ($name) {
-        setcookie($name, "", time() - 3600);
     }
 }

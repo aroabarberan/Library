@@ -1,6 +1,7 @@
 <?php
 
-require_once 'enum/Weekday.php';
+include dirname(__FILE__) . '/enum/Weekday.php';
+
 
 class Filter
 {

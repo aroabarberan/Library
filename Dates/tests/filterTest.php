@@ -1,10 +1,11 @@
 <?php
 
-require_once '../Date.php';
-require_once '../Filter.php';
-require_once '../FamilyDate.php';
-require_once '../enum/Month.php';
-require_once '../enum/Season.php';
+
+include dirname(__FILE__) . '/../Date.php';
+include dirname(__FILE__) . '/../FamilyDate.php';
+include dirname(__FILE__) . '/../Filter.php';
+include dirname(__FILE__) . '/../enum/Season.php';
+include dirname(__FILE__) . '/../enum/Month.php';
 
 $date1 = Date::createDate(2017, Month::JANUARY, 1);
 $date2 = Date::createDate(2017, Month::DECEMBER, 31);

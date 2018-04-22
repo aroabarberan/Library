@@ -1,7 +1,9 @@
 <?php
 
-require_once 'enum/Season.php';
-require_once 'Date.php';
+
+include dirname(__FILE__) . '/enum/Season.php';
+include dirname(__FILE__) . '/Date.php';
+
 
 class FamilyDate
 {

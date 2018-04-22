@@ -1,6 +1,6 @@
 <?php
 
-require_once 'enum/Season.php';
+include dirname(__FILE__) . '/enum/Season.php';
 
 class Date
 {

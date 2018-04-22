@@ -1,8 +1,9 @@
 <?php
 
-require_once '../FamilyDate.php';
-require_once '../Date.php';
-require_once '../Filter.php';
+include dirname(__FILE__) . '/../FamilyDate.php';
+include dirname(__FILE__) . '/../Date.php';
+include dirname(__FILE__) . '/../Filter.php';
+
 
 // Un mendrugo trabaja de 2016/05/20 hasta 2017/10/10,
 // no trabaja ni los fines de semana ni en verano.

@@ -1,7 +1,6 @@
 <?php
 
-require_once '../Convertion.php';
-
+include dirname(__FILE__) . '/../Convertion.php';
 
 function testSecondsTo()
 {

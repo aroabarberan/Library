@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Month.php';
+include dirname(__FILE__) . '/Month.php';
 
 class Season
 {

@@ -1,9 +1,8 @@
 <?php
 
-require_once 'dates/DateFilter.php';
-require_once 'dates/Date.php';
-require_once 'dates/enum/Season.php';
-
+include dirname(__FILE__) . '/../Filter.php';
+include dirname(__FILE__) . '/../Date.php';
+include dirname(__FILE__) . '/../enum/Season.php';
 
 
 // FROMAS DE CREAR UNA FECHA.

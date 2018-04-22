@@ -1,7 +1,8 @@
 <?php
 
-require_once '../Date.php';
-require_once '../FamilyDate.php';
+include dirname(__FILE__) . '/../Date.php';
+include dirname(__FILE__) . '/../FamilyDate.php';
+
 
 // Dos maneras de crear fechas.
 $date1 = FamilyDate::separateStringDateToObjectDate('2/5/2000');
@@ -33,3 +34,5 @@ $age = FamilyDate::isAdult(Date::createDate(1995, 5, 26));
 // Muestro todos los lunes que son dia 2.
 $days = FamilyDate::datesBetween(Date::createDate(2016, 1, 1), Date::createDate(2016, 12, 31));
 $daysFilters = FamilyDate::showAllSpecificDays($days, 2,1);
+
+echo "<pre>" . print_r($daysFilters, true) . "</pre>";

@@ -1,10 +1,10 @@
 <?php
 
-require_once '../Date.php';
-require_once '../FamilyDate.php';
-require_once '../Filter.php';
-require_once '../enum/Season.php';
-require_once '../enum/Weekday.php';
+include dirname(__FILE__) . '/../Date.php';
+include dirname(__FILE__) . '/../FamilyDate.php';
+include dirname(__FILE__) . '/../Filter.php';
+include dirname(__FILE__) . '/../enum/Season.php';
+include dirname(__FILE__) . '/../enum/Weekday.php';
 
 // 2/10/2016 29/10/2017
 // de lunes a vieres trabaja 8 horas y cobra 11€ al día,

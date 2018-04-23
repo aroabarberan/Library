@@ -1,6 +1,6 @@
 <?php
 
-require_once '../File.php';
+require_once '/File.php';
 
 //$file = new File('file.txt');
 //$file2 = File::file('newFile.txt');

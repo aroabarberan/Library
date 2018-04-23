@@ -1,13 +1,12 @@
 <?php
 
-require_once '../File.php';
-require_once '../../Dates/Date.php';
-require_once '../../Dates/FamilyDate.php';
-
+include(dirname(__FILE__) . '/../File.php'); 
+include(dirname(__FILE__) . '/../../Dates/Date.php'); 
+include(dirname(__FILE__) . '/../../Dates/FamilyDate.php'); 
 
 $alumns = [];
-$alumnsData = fopen('DatosAlumnos.txt', 'r');
-$alumnsAge = fopen('edades.txt', 'r');
+$alumnsData = fopen('../txt/DatosAlumnos.txt', 'r');
+$alumnsAge = fopen('../txt/edades.txt', 'r');
 
 while (!feof($alumnsData)) {
     $lineAlumnsData = fgets($alumnsData);

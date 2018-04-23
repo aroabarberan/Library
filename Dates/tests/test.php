@@ -1,8 +1,8 @@
 <?php
 
-include dirname(__FILE__) . '/../Filter.php';
+// include dirname(__FILE__) . '/../Filter.php';
 include dirname(__FILE__) . '/../Date.php';
-include dirname(__FILE__) . '/../enum/Season.php';
+include dirname(__FILE__) . '../enum/Season.php';
 
 
 // FROMAS DE CREAR UNA FECHA.

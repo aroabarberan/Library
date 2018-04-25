@@ -14,11 +14,12 @@ class Image
         return imagecreatefromjpeg($path);
     }
 
-    public static function createImageFromString($string) {
+    public static function createImageFromString($string)
+    {
         $width = getimagesizefromstring($string)[0];
         $height = getimagesizefromstring($string)[1];
-        
-        $img =  new Image($width, $height);
+
+        $img = new Image($width, $height);
         $img->image = imagecreatefromstring($string);
         return $img;
     }
@@ -62,7 +63,7 @@ class Image
         }
     }
 
-    public function generateCaptcha($numberLines, $limitWidth, $limitHeight, $colorLetters, $colorLines,  $angle = 0.0)
+    public function generateCaptcha($numberLines, $limitWidth, $limitHeight, $colorLetters, $colorLines, $angle = 0.0)
     {
         for ($i = 0; $i <= $numberLines; $i++) {
             for ($j = 0; $j < $numberLines; $j++) {

@@ -8,7 +8,7 @@ error_reporting(E_ALL);
     <tr>
         <td>&nbsp</td>
         <?php
-        $letter = "ABC";
+        $letter = "ABCDE";
         $length = strlen($letter);
         for ($i = 0; $i < $length; $i++): ?>
             <td> <?=$i?></td>   
@@ -33,13 +33,15 @@ error_reporting(E_ALL);
 
                     $letters = $image[$i]->generateLettersRandom(1);
                     $image[$i]->writeTextInImage($letters, 20, 35, $image[$i]->getColorWhite(), -40);
+                    $image[$i]->paintLineRandom(5, 100, 75, $image[$i]->getColorYellow());
                     
                     $panel[$j][$letter[$i]] = $letters;
             ?>
 	        <td><img src="<?=$image[$i]->getSrc();?>" alt=""></td>
 	        <?php endfor;?>
         </tr>
-    <?php endfor;   
+    <?php endfor;?>
+    <?php
 
     for ($i = 0; $i < count($panel); $i++):
         $captcha .= $panel[$rowNumber[$i]][$columLetter[$i]];       
@@ -57,7 +59,6 @@ error_reporting(E_ALL);
 </form>
 
 <?php
-
 if (!isset($_POST['send'])) {
     return;
 }

@@ -1,7 +1,8 @@
 <?php
 require_once "Client.php";
 require_once "DaoClient.php";
-// require_once "../image/Image.php";
+include(dirname(__FILE__) . '/../../Images/Image.php'); 
+
 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);

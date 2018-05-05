@@ -1,7 +1,8 @@
 <?php
-session_start();
 include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
 include dirname(__FILE__) . '/../../Images/Image.php';
+include dirname(__FILE__) . '/../../Cookies/Cookie.php';
+include dirname(__FILE__) . '/../../Cookies/utilsCookie.php';
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
@@ -9,17 +10,17 @@ error_reporting(E_ALL);
 ?>
 <form name=f1 method="post" action=<?php echo $_SERVER['PHP_SELF'] ?>>
     <div>
-        <label for="user">Usuario</label>
-        <input type=text name="user">
+        <label for="userName">UserName</label>
+        <input type=text name="userName" value="<?php if (isset($_POST['userName'])) echo $_POST['userName']; ?>">
     </div>
     <div>
         <label for="password">Password</label>
-        <input type="password" name="password">
+        <input type="password" name="password" value="<?php if (isset($_POST['password'])) echo $_POST['password']; ?>">
     </div>
 
     <?php
 
-function showCaptcha()
+function showCaptcha($userName, $password)
 {
     ?>
     <table border=2>
@@ -66,30 +67,35 @@ function showCaptcha()
         <input type="text" name="resultCaptcha" id="resultCaptcha">
     </label>
     <input type="hidden" name=letters value="<?=$captcha?>">
-    <input type="submit" name="send" id="send" value="Send">
+    <input type="submit" name="sendCaptcha" id="sendCaptcha" value="Enviar">
 </form>
 
 <?php
+    $db = new DataBasePDO();
+    $db->setTable('usuarios');
+    $users = $db->readAll();
 
-    // if (isset($_POST['send'])) {
-    //     if ($_POST['letters'] == $_POST['resultCaptcha']) {
-    //         echo "Coincide";
-    //     } else {
-    //         echo "No coincide";
-    //     }    
-    // }
+    if (isLogin($users, $userName, $password)) {
+        if (isset($_POST['sendCaptcha'])) {
+            if ($_POST['letters'] == $_POST['resultCaptcha']) {
+                echo "Coincide";
+            } else {
+                echo "No coincide";
+            }    
+        }
+    }
 }
 
-function locked($user)
+function locked($userName)
 {
     $db = new DataBasePDO();
     $db->setTable('logs');
     $locked = false;
 
-    $query = "SELECT hora,acceso FROM logs WHERE BINARY Usuario=:user
+    $query = "SELECT hora,acceso FROM logs WHERE BINARY Usuario=:userName
                 order by Hora desc limit 3";
 
-    $params = array(":user" => $user);
+    $params = array(":userName" => $userName);
     $rows = $db->query($query, $params);
     $cont = 0;
 
@@ -98,14 +104,14 @@ function locked($user)
             $cont++;
         }
     }
-    if ($cont == 2) {
+    if ($cont == 3) {
         $locked = true;
     }
     return $locked;
 }
 
 ?>
-    <input type="submit" value="Enviar" name="send">
+    <input type="submit" value="Enviar" id="send" name="send">
 </form>
 
 <?php
@@ -115,49 +121,59 @@ if (!isset($_POST['send'])) {
 }
 
 $db = new DataBasePDO();
-$user = $_POST['user'];
+$userName = $_POST['userName'];
 $password = sha1($_POST['password']);
 
 $query = "SELECT count(*) as cuenta from usuarios
-    where BINARY Usuario=:user and BINARY Clave=:pass";
+    where BINARY Usuario=:userName and BINARY Clave=:pass";
 
 $params = [
-    ":user" => $user,
+    ":userName" => $userName,
     ":pass" => $password,
 ];
 $rows = $db->query($query, $params);
 
-if ($rows[0]['cuenta'] == 1) {
+$time = time();
+$login = false;
+$db->setTable('usuarios');
+$users = $db->readAll();
+
+if (isLogin($users, $userName, $password)) {
+    $cookie = new Cookie('user', $userName);
     if (isset($_POST['resultCaptcha'])) {
         if ($_POST['resultCaptcha'] != $_POST['letters']) {
-            echo "Valor captcha incorrecto";
-            $access = 'D';
+            $access = 'D';            
+            echo "Valor captcha incorrecto";            
         } else {
-            echo "Login correcto ";
-            $_SESSION['user'] = $user;
             $access = 'C';
             $login = true;
+            echo "Login correcto";
+            header("location:index.php");            
         }
     } else {
-        echo "Login correcto ";
-        $_SESSION['user'] = $user;
         $access = 'C';
         $login = true;
+        echo "Login correcto";
+        header("location:index.php");                    
     }
+    header("location:index.php");
 } else {
+    $access = 'D';    
     echo "Login incorrecto";
-    $access = 'D';
 }
 
-if (locked($user) && !$login) {
-    showCaptcha();
-    $query = "INSERT INTO logs VALUES (NULL, :user, $time, '$access')";
-    $db->query($query, [":user" => $user]);
+
+if (locked($userName) && !$login) {
+    $query = "INSERT INTO logs VALUES (NULL, :userName, $time, '$access')";
+    $db->query($query, [":userName" => $userName]);
+    
+    showCaptcha($userName, $password);
 } else {
-    $time = time();
-    $query = "INSERT INTO logs VALUES (NULL, :user, $time, '$access')";
-    $db->query($query, [":user" => $user]);
+    $query = "INSERT INTO logs VALUES (NULL, :userName, $time, '$access')";
+    $db->query($query, [":userName" => $userName]);
 }
+
 if ($access == 'C') {
-    header("Location: index.php");
+    echo "REDIRIGIRIA Al INDEX";
+    // header("Location: index.php");
 }

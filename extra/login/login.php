@@ -32,7 +32,7 @@ function showCaptcha()
         <td>E</td>
     </tr>
     <?php
-$letter = "ABCDE";
+    $letter = "ABCDE";
     $col = $letter[rand(0, strlen($letter) - 1)];
     $row = rand(0, 4);
 
@@ -40,23 +40,23 @@ $letter = "ABCDE";
         <tr>
             <td> <?=$i?></td>
             <?php
-for ($j = 0; $j < 5; $j++):
-        $image[$i] = new Image(100, 75);
-        $image[$i]->fill($image[$i]->getColorRandom());
-        $letters = $image[$i]->generateLettersRandom(6);
+            for ($j = 0; $j < 5; $j++):
+                $image[$i] = new Image(100, 75);
+                $image[$i]->fill($image[$i]->getColorRandom());
+                $letters = $image[$i]->generateLettersRandom(6);
 
-        $image[$i]->writeTextInImage($letters, 20, 35, $image[$i]->getColorRandom(), -40);
-        $image[$i]->paintLineRandom(5, 100, 75, $image[$i]->getColorRandom());
+                $image[$i]->writeTextInImage($letters, 20, 35, $image[$i]->getColorRandom(), -40);
+                $image[$i]->paintLineRandom(5, 100, 75, $image[$i]->getColorRandom());
 
-        if ($col == $letter[$j]) {
-            if ($row == $i) {
-                echo $letters;
-                $captcha = $letters;
-            }
-        }
-        ?>
-						            <td><img src="<?=$image[$i]->getSrc();?>" alt=""></td>
-						            <?php endfor;?>
+                if ($col == $letter[$j]) {
+                    if ($row == $i) {
+                        echo $letters;
+                        $captcha = $letters;
+                    }
+                }
+            ?>
+		    <td><img src="<?=$image[$i]->getSrc();?>" alt=""></td>
+	        <?php endfor;?>
         </tr>
     <?php endfor;?>
 </table>
@@ -71,15 +71,13 @@ for ($j = 0; $j < 5; $j++):
 
 <?php
 
-    if (!isset($_POST['send'])) {
-        return;
-    }
-
-    if ($_POST['letters'] == $_POST['resultCaptcha']) {
-        echo "Coincide";
-    } else {
-        echo "No coincide";
-    }
+    // if (isset($_POST['send'])) {
+    //     if ($_POST['letters'] == $_POST['resultCaptcha']) {
+    //         echo "Coincide";
+    //     } else {
+    //         echo "No coincide";
+    //     }    
+    // }
 }
 
 function locked($user)
@@ -96,11 +94,11 @@ function locked($user)
     $cont = 0;
 
     foreach ($rows as $row) {
-        if ($row['Acceso'] == "D") {
+        if ($row['acceso'] == "D") {
             $cont++;
         }
     }
-    if ($cont == 3) {
+    if ($cont == 2) {
         $locked = true;
     }
     return $locked;
@@ -144,6 +142,7 @@ if ($rows[0]['cuenta'] == 1) {
         echo "Login correcto ";
         $_SESSION['user'] = $user;
         $access = 'C';
+        $login = true;
     }
 } else {
     echo "Login incorrecto";
@@ -152,11 +151,12 @@ if ($rows[0]['cuenta'] == 1) {
 
 if (locked($user) && !$login) {
     showCaptcha();
+    $query = "INSERT INTO logs VALUES (NULL, :user, $time, '$access')";
+    $db->query($query, [":user" => $user]);
 } else {
     $time = time();
-    $db = new DataBasePDO();
-    $db->setTable('logs');
-    $query = $db->insert('Id, Usuario, Hora, Acceso', [NULL, "$user", $time, "$access"]);
+    $query = "INSERT INTO logs VALUES (NULL, :user, $time, '$access')";
+    $db->query($query, [":user" => $user]);
 }
 if ($access == 'C') {
     header("Location: index.php");

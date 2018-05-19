@@ -61,9 +61,6 @@ if (!isset($_POST['coin'])) {
         echo $result['PVP'];
     }
 } else {
-    // $json = file_get_contents("http://www.apilayer.net/api/live?access_key=5f609cca964f6bb6670d6d0b5eecbb83&currencies=EUR");
-    // $usdToEurs = json_decode($json, true)['quotes']['USDEUR'];
-
     foreach ($results as $key => $result) {
         $string = base64_decode($results[$key]['Imagen']);
         $image = Image::createImageFromString($string);

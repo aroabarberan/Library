@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="img-UA-Compatible" content="ie=edge">
+    <title>Coins</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body onload="createImages()">
+    <div id="images">
+
+    </div>
+</body>
+<script>
+    function getProducts() {
+        return [
+            '59333.jpg',
+            '654000.jpg',
+            '24563244.jpg'
+        ];
+    }
+
+    function createImages() {
+        var cont = 0;
+        getProducts().forEach(element => {
+            var img = document.createElement("img");
+            img.setAttribute("src", "images/" + element);
+            img.setAttribute("id", "image");
+            img.setAttribute("alt", element);
+            document.getElementById("images").appendChild(img);
+
+            var p = document.createElement("p");
+            p.setAttribute("id", "price" + cont);
+            document.getElementById("images").appendChild(p);
+            document.getElementById("price" + cont).innerHTML = element.replace(".jpg", "");
+            cont++;
+        });
+    }
+
+    fetch('http://apilayer.net/api/live?access_key=XXXXXXXXXXXXXXXXXXXXXXX')
+        .then((response) => {
+            console.log(response.json())
+            return coins = {
+                "GBP": json.quotes.USDGBP,
+                "EUR": json.quotes.USDEUR,
+                "BDT": json.quotes.USDBDT,
+                "COP": json.quotes.USDCOP,
+                "BTN": json.quotes.USDBTN,
+                "ZMW": json.quotes.USDZMW,
+            }
+                .then((data) = > console.log('data = ', data))
+                .catch((err) => console.error(err));
+        })
+
+
+</script>
+
+</html>

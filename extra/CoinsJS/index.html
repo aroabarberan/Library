@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="img-UA-Compatible" content="ie=edge">
-    <title>Coins</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="img-UA-Compatible" content="ie=edge">
+        <title>Coins</title>
+    </head>
 
-<body onload="createImages()">
-    <div id="images">
+    <body onload="createImages()">
+        <div>
+            <label for="coins">Coins</label>
+            <select name="coins" id="coins"></select>
+        </div>
+        <input type="submit" value="send" onclick="calculate()">
+        <div id="images"></div>
+    </body>
 
-    </div>
-</body>
-<script>
+    <script>
     function getProducts() {
         return [
             '59333.jpg',
@@ -36,26 +39,35 @@
             p.setAttribute("id", "price" + cont);
             document.getElementById("images").appendChild(p);
             document.getElementById("price" + cont).innerHTML = element.replace(".jpg", "");
+        
             cont++;
         });
+            
+        console.log(document.getElementById("price1").textContent)
     }
 
-    fetch('http://apilayer.net/api/live?access_key=XXXXXXXXXXXXXXXXXXXXXXX')
-        .then((response) => {
-            console.log(response.json())
-            return coins = {
-                "GBP": json.quotes.USDGBP,
-                "EUR": json.quotes.USDEUR,
-                "BDT": json.quotes.USDBDT,
-                "COP": json.quotes.USDCOP,
-                "BTN": json.quotes.USDBTN,
-                "ZMW": json.quotes.USDZMW,
-            }
-                .then((data) = > console.log('data = ', data))
-                .catch((err) => console.error(err));
+    fetch('http://apilayer.net/api/live?access_key=XXXXXXXXXXXXXXXXXXXXX')
+        .then(response => response.json())
+        .then(json => {
+            var coins = json.quotes;
+            var keys = Object.keys(coins);
+            var coins = Object.values(json.quotes);
+
+            for (var i = 0; i < keys.length; i++) {
+                var option = document.createElement("option");
+                option.text = keys[i].replace("USD", "");
+                option.setAttribute("value", coins[i]);
+                document.getElementById("coins").add(option);
+            }  
         })
+        .catch(err=> console.error(err));
 
-
-</script>
-
-</html>
+        function calculate() {
+            var numberImages = document.getElementsByTagName("img").length;
+            for (var i = 0; i < numberImages; i++) {
+                var price = document.getElementById("price" + i); 
+                price.innerHTML = price.textContent * document.getElementById("coins").value;
+            }
+        }
+        </script>
+    </html>

@@ -6,7 +6,7 @@ include dirname(__FILE__) . '/../../Cookies/utilsCookie.php';
 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-session_start();
+ob_start();
 ?>
 
 <form name=f1 method="post" action=<?php echo $_SERVER['PHP_SELF'] ?>>
@@ -76,13 +76,12 @@ if (isset($_POST['send'])) {
 
     if ($_POST['letters'] == $_POST['resultCaptcha']) {
         if (isLogin($users, $userName, $password)) {
-            // $cookie = new Cookie('user', $userName);
+            echo $userName;
+            $cookie = new Cookie('user', $userName);
             $access = 'C';
             $login = true;
             echo "Login correcto";
-            echo "DEBERIA MANDAR AL INDEX";
-
-            // header("Location: index.php");
+            header("Location: index.php");
         } else {
             $access = 'D';
             $login = false;

@@ -5,7 +5,7 @@ include dirname(__FILE__) . '/../../Cookies/Cookie.php';
 include dirname(__FILE__) . '/../../Cookies/utilsCookie.php';
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-
+session_start();
 // echo sha1("aroa");
 
 
@@ -60,7 +60,7 @@ if (isLogin($users, $userName, $password)) {
     $access = 'C';
     $login = true;
     echo "Login correcto";
-    header("location:index.php");
+    header("location: index.php");
 } else {
     $access = 'D';
     $login = false;

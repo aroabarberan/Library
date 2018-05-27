@@ -71,7 +71,3 @@ if (locked($userName) && !$login) header("Location: checkCaptcha.php");
 
 $query = "INSERT INTO logs VALUES (NULL, :userName, $time, '$access')";
 $db->query($query, [":userName" => $userName]);
-
-if ($access == 'C') {
-    header("Location: index.php");
-}

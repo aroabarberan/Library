@@ -7,10 +7,11 @@ include(dirname(__FILE__) . '/../../Images/Image.php');
 // todos los productos de esa familia
 
 
-// sobre el ultimo ejercicio que permita con un check seleccionar tantos productos como quieras
-// el boton enviar leva a la pagina en la que aparece los productos que has seleccionado y el importe total
+// sobre el ultimo ejercicio que permita con un check seleccionar tantos productos 
+// como quieras el boton enviar lleva a la pagina en la que aparece los productos 
+// que has seleccionado y el importe total
 
-// modificar el anterior para que en el desplegable aparexca un numero del uno al diez
+// modificar el anterior para que en el desplegable aparezca un numero del uno al diez
 // el despegable muestra un registro por pagina
 // si pones 3 muestra los tres primeros de 12 articulos (paginacion)
 
@@ -38,4 +39,44 @@ $families = $db->readAll();
 <?php
 if (!isset($_POST['send'])) return;
 
-echo $_POST['family'];
+$db->setTable('articulos');
+$articles = $db->read('Familia', $_POST['family']);
+?>
+<table border="2px"> 
+    <tr>
+        <td>Id</td>
+        <td>Nombre</td>
+        <td>Marca</td>
+        <td>Modelo</td>
+        <td>Precio</td>
+        <td>Familia</td>
+        <td>Imagen</td>
+        <td>Tipo</td>
+        <td>Check</td>
+    </tr>
+    <form action="orders.php" method="POST">
+    
+        <?php 
+        foreach ($articles as $key => $article) {
+            ?>
+            <tr>
+            <?php
+            $string = base64_decode($article['Imagen']);
+            $image = Image::createImageFromString($string);
+            ?>
+            <td><?= $article['Id'] ?></td>
+            <td><?= $article['Nombre'] ?></td>
+            <td><?= $article['Marca'] ?></td>
+            <td><?= $article['Modelo'] ?></td>
+            <td><?= $article['Precio'] ?></td>
+            <td><?= $article['Familia'] ?></td>
+            <td><img src='<?=$image->getSrc();?>' style="width: 100px; hight: 100px;"></td>
+            <td><?= $article['Tipo'] ?></td>
+            <td><input type="checkbox" name="articles[] ?>" id="articles[]" value="<?= $article['Id'] ?>"></td>
+            </tr>
+            <?php
+        }
+        ?>
+        <input type="submit" value="Enviar" name="sendArticle" id="sendArticle">
+    </form>
+</table>

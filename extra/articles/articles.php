@@ -3,24 +3,13 @@
 include(dirname(__FILE__) . '/../../DataBase/DataBasePDO.php');
 include(dirname(__FILE__) . '/../../Images/Image.php');
 
-// desplegable que carge todas la familias y al selecconar familia muestre 
-// todos los productos de esa familia
-
-
-// sobre el ultimo ejercicio que permita con un check seleccionar tantos productos 
-// como quieras el boton enviar lleva a la pagina en la que aparece los productos 
-// que has seleccionado y el importe total
-
-// modificar el anterior para que en el desplegable aparezca un numero del uno al diez
-// el despegable muestra un registro por pagina
-// si pones 3 muestra los tres primeros de 12 articulos (paginacion)
-
 $db = new DataBasePDO();
 $db->setTable('familias');
 $families = $db->readAll();
-?>
 
-<form action="" method="POST">
+//  onchange="f1.submit()";
+?>
+<form action="" name='f1' id='f1' method="POST">
     <div>
         <label for="family">Familias</label>
         <select name="family" id="family">
@@ -32,15 +21,31 @@ $families = $db->readAll();
                     </option>
             <?php endforeach;?>
         </select>
+
+        <select name="articlesPerPage" id="articlesPerPage">
+            <option value=""></option>
+            <?php for($i = 1; $i <= 10; $i++): ?>
+                    <option value="<?= $i ?>"
+                    <?php if(isset($_POST['articlesPerPage']) && $_POST['articlesPerPage'] == $i) echo 'selected';?>>
+                    <?= $i ?></option>
+            <?php endfor;?>
+        </select>
+
         <input type="submit" value="Enviar" id="send" name="send">
     </div>
 </form>
 
 <?php
-if (!isset($_POST['send'])) return;
+if (!isset($_POST['family'])) return;
 
 $db->setTable('articulos');
 $articles = $db->read('Familia', $_POST['family']);
+
+$init = 1;
+$size = count($articles) - 1;
+$articlesPerPage = $_POST['articlesPerPage'];
+$numberLinks = round($size / $articlesPerPage) -1;
+$page = 1;
 ?>
 <table border="2px"> 
     <tr>
@@ -55,28 +60,37 @@ $articles = $db->read('Familia', $_POST['family']);
         <td>Check</td>
     </tr>
     <form action="orders.php" method="POST">
-    
         <?php 
-        foreach ($articles as $key => $article) {
+         $init = $articlesPerPage * $page;
+        for($i = $init; $i < $init + $articlesPerPage; $i++) {
+        // foreach ($articles as $key => $article) {
             ?>
             <tr>
-            <?php
-            $string = base64_decode($article['Imagen']);
-            $image = Image::createImageFromString($string);
-            ?>
-            <td><?= $article['Id'] ?></td>
-            <td><?= $article['Nombre'] ?></td>
-            <td><?= $article['Marca'] ?></td>
-            <td><?= $article['Modelo'] ?></td>
-            <td><?= $article['Precio'] ?></td>
-            <td><?= $article['Familia'] ?></td>
-            <td><img src='<?=$image->getSrc();?>' style="width: 100px; hight: 100px;"></td>
-            <td><?= $article['Tipo'] ?></td>
-            <td><input type="checkbox" name="articles[] ?>" id="articles[]" value="<?= $article['Id'] ?>"></td>
+                <?php
+                $string = base64_decode($articles[$i]['Imagen']);
+                $image = Image::createImageFromString($string);
+                ?>
+                <td><?= $articles[$i]['Id'] ?></td>
+                <td><?= $articles[$i]['Nombre'] ?></td>
+                <td><?= $articles[$i]['Marca'] ?></td>
+                <td><?= $articles[$i]['Modelo'] ?></td>
+                <td><?= $articles[$i]['Precio'] ?></td>
+                <td><?= $articles[$i]['Familia'] ?></td>
+                <td><img src='<?=$image->getSrc();?>' style="width: 100px; hight: 100px;"></td>
+                <td><?= $articles[$i]['Tipo'] ?></td>
+                <td>
+                    <input type="checkbox" name="arr[]" id="arr[]" 
+                    value="<?= $articles['Id']?>"  
+                    <?php if(isset($_POST['arr']) && $_POST['arr'] ==  $articles['Id']) echo 'checked';?>>
+                </td>
             </tr>
             <?php
         }
         ?>
+        </table>        
         <input type="submit" value="Enviar" name="sendArticle" id="sendArticle">
-    </form>
-</table>
+</form>
+
+<?php for ($i = 0; $i < $numberLinks; $i++): ?>
+    <a href="articles.php?init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a>
+<?php endfor; ?>

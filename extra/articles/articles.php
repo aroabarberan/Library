@@ -6,17 +6,17 @@ include(dirname(__FILE__) . '/../../Images/Image.php');
 $db = new DataBasePDO();
 $db->setTable('familias');
 $families = $db->readAll();
-
+echo "al;skdmkal";
 //  onchange="f1.submit()";
 ?>
-<form action="" name='f1' id='f1' method="POST">
+<form action="" name='f1' id='f1' method="GET">
     <div>
         <label for="family">Familias</label>
         <select name="family" id="family">
             <option value=""></option>
             <?php foreach($families as $family): ?>
                     <option value="<?= $family['Id']; ?>" 
-                       <?php if(isset($_POST['family']) && $_POST['family'] == $family['Id']) echo 'selected';?>>
+                       <?php if(isset($_GET['family']) && $_GET['family'] == $family['Id']) echo 'selected';?>>
                        <?= $family['Nombre']?>
                     </option>
             <?php endforeach;?>
@@ -26,7 +26,7 @@ $families = $db->readAll();
             <option value=""></option>
             <?php for($i = 1; $i <= 10; $i++): ?>
                     <option value="<?= $i ?>"
-                    <?php if(isset($_POST['articlesPerPage']) && $_POST['articlesPerPage'] == $i) echo 'selected';?>>
+                    <?php if(isset($_GET['articlesPerPage']) && $_GET['articlesPerPage'] == $i) echo 'selected';?>>
                     <?= $i ?></option>
             <?php endfor;?>
         </select>
@@ -36,16 +36,20 @@ $families = $db->readAll();
 </form>
 
 <?php
-if (!isset($_POST['family'])) return;
+if (!isset($_GET['family'])) return;
 
 $db->setTable('articulos');
-$articles = $db->read('Familia', $_POST['family']);
+$articles = $db->read('Familia', $_GET['family']);
 
 $init = 1;
 $size = count($articles) - 1;
-$articlesPerPage = $_POST['articlesPerPage'];
-$numberLinks = round($size / $articlesPerPage) -1;
+$articlesPerPage = $_GET['articlesPerPage'];
+$numberLinks = floor($size / $articlesPerPage) -1;
+
+if(isset($_GET['init'])) $page = $_GET['init'];
 $page = 1;
+
+$init = $articlesPerPage * $page;
 ?>
 <table border="2px"> 
     <tr>
@@ -61,9 +65,8 @@ $page = 1;
     </tr>
     <form action="orders.php" method="POST">
         <?php 
-         $init = $articlesPerPage * $page;
+        
         for($i = $init; $i < $init + $articlesPerPage; $i++) {
-        // foreach ($articles as $key => $article) {
             ?>
             <tr>
                 <?php
@@ -92,5 +95,6 @@ $page = 1;
 </form>
 
 <?php for ($i = 0; $i < $numberLinks; $i++): ?>
-    <a href="articles.php?init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a>
+    <!-- <a href="articles.php?init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a> -->
+    <a href="articles.php?family=<?= $_GET['family'] ?>&articlesPerPage=<?= $_GET['articlesPerPage'] ?>&send=Enviar&init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a>
 <?php endfor; ?>

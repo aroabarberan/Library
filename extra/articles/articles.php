@@ -6,7 +6,6 @@ include(dirname(__FILE__) . '/../../Images/Image.php');
 $db = new DataBasePDO();
 $db->setTable('familias');
 $families = $db->readAll();
-echo "al;skdmkal";
 //  onchange="f1.submit()";
 ?>
 <form action="" name='f1' id='f1' method="GET">
@@ -36,20 +35,26 @@ echo "al;skdmkal";
 </form>
 
 <?php
-if (!isset($_GET['family'])) return;
+if (!isset($_GET['send'])) return;
 
 $db->setTable('articulos');
-$articles = $db->read('Familia', $_GET['family']);
-
-$init = 1;
-$size = count($articles) - 1;
+$totalArticles = $db->read('Familia', $_GET['family']);
 $articlesPerPage = $_GET['articlesPerPage'];
-$numberLinks = floor($size / $articlesPerPage) -1;
 
-if(isset($_GET['init'])) $page = $_GET['init'];
-$page = 1;
+if(isset($_GET['init'])) {
+    $page = $_GET['init'];
+    $init = 0 + $articlesPerPage;
+} else {
+    $page = 1;
+    $init = $page - 1;
+    
+}
 
-$init = $articlesPerPage * $page;
+$articles = $db->query("SELECT * from articulos WHERE Familia=$_GET[family] LIMIT $init, $articlesPerPage");
+
+$size = count($totalArticles);
+$numberLinks = round($size / $articlesPerPage);
+
 ?>
 <table border="2px"> 
     <tr>
@@ -66,35 +71,34 @@ $init = $articlesPerPage * $page;
     <form action="orders.php" method="POST">
         <?php 
         
-        for($i = $init; $i < $init + $articlesPerPage; $i++) {
+            foreach ($articles as $article) {
             ?>
             <tr>
-                <?php
-                $string = base64_decode($articles[$i]['Imagen']);
+            <?php
+                $string = base64_decode($article['Imagen']);
                 $image = Image::createImageFromString($string);
                 ?>
-                <td><?= $articles[$i]['Id'] ?></td>
-                <td><?= $articles[$i]['Nombre'] ?></td>
-                <td><?= $articles[$i]['Marca'] ?></td>
-                <td><?= $articles[$i]['Modelo'] ?></td>
-                <td><?= $articles[$i]['Precio'] ?></td>
-                <td><?= $articles[$i]['Familia'] ?></td>
+                <td><?= $article['Id'] ?></td>
+                <td><?= $article['Nombre'] ?></td>
+                <td><?= $article['Marca'] ?></td>
+                <td><?= $article['Modelo'] ?></td>
+                <td><?= $article['Precio'] ?></td>
+                <td><?= $article['Familia'] ?></td>
                 <td><img src='<?=$image->getSrc();?>' style="width: 100px; hight: 100px;"></td>
-                <td><?= $articles[$i]['Tipo'] ?></td>
+                <td><?= $article['Tipo'] ?></td>
                 <td>
                     <input type="checkbox" name="arr[]" id="arr[]" 
-                    value="<?= $articles['Id']?>"  
+                    value="<?= $article['Id']?>"  
                     <?php if(isset($_POST['arr']) && $_POST['arr'] ==  $articles['Id']) echo 'checked';?>>
                 </td>
             </tr>
             <?php
         }
         ?>
-        </table>        
+</table>        
         <input type="submit" value="Enviar" name="sendArticle" id="sendArticle">
-</form>
+    </form>
 
 <?php for ($i = 0; $i < $numberLinks; $i++): ?>
-    <!-- <a href="articles.php?init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a> -->
     <a href="articles.php?family=<?= $_GET['family'] ?>&articlesPerPage=<?= $_GET['articlesPerPage'] ?>&send=Enviar&init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a>
 <?php endfor; ?>

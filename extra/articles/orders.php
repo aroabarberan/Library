@@ -1,6 +1,12 @@
 <?php
-include(dirname(__FILE__) . '/../../DataBase/DataBasePDO.php');
-include(dirname(__FILE__) . '/../../Images/Image.php');
+include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
+include dirname(__FILE__) . '/../../Images/Image.php';
+include dirname(__FILE__) . '/../../Cookies/Cookie.php';
+
+if (!Cookie::isExists('user')) {
+    header("location:login.php");
+}
+
 
 echo "<h2>Productos seleccionados</h2>";
 

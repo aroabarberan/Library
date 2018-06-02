@@ -1,13 +1,22 @@
 <?php
 
-include(dirname(__FILE__) . '/../../DataBase/DataBasePDO.php');
-include(dirname(__FILE__) . '/../../Images/Image.php');
+include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
+include dirname(__FILE__) . '/../../Images/Image.php';
+include dirname(__FILE__) . '/../../Cookies/Cookie.php';
+
+if (!Cookie::isExists('user')) {
+    header("location:login.php");
+}
 
 $db = new DataBasePDO();
 $db->setTable('familias');
 $families = $db->readAll();
 //  onchange="f1.submit()";
 ?>
+<form action="logOut.php" method="post">
+    <input type="submit" value="Log out" id="logOut">
+</form>
+
 <form action="" name='f1' id='f1' method="GET">
     <div>
         <label for="family">Familias</label>

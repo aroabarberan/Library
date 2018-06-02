@@ -41,13 +41,13 @@ $db->setTable('articulos');
 $totalArticles = $db->read('Familia', $_GET['family']);
 $articlesPerPage = $_GET['articlesPerPage'];
 
+
 if(isset($_GET['init'])) {
     $page = $_GET['init'];
     $init = 0 + $articlesPerPage;
 } else {
-    $page = 1;
-    $init = $page - 1;
-    
+    $page = 0;
+    $init = 0;
 }
 
 $articles = $db->query("SELECT * from articulos WHERE Familia=$_GET[family] LIMIT $init, $articlesPerPage");

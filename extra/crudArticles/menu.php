@@ -27,19 +27,19 @@ if (isset($_GET['op'])) {
     $op = $_GET['op'];
     switch ($op) {
         case 1:
-            $articles = DaoArticles::readAll();
+            $articles = DaoArticle::readAll();
             ?>
         <h1>Todos los articulos</h1>
         <table border='2'>
             <tr>
-                <td>id</td>
-                <td>nombre</td>
-                <td>marca</td>
-                <td>modelo</td>
-                <td>precio</td>
-                <td>familia</td>
+                <td>Id</td>
+                <td>Nombre</td>
+                <td>Marca</td>
+                <td>Modelo</td>
+                <td>Precio</td>
+                <td>Familia</td>
                 <td>Imagen</td>
-                <td>tipo</td>
+                <td>Tipo</td>
             </tr>
             <?php foreach ($articles as $article): ?>
                 <tr>
@@ -62,127 +62,148 @@ if (isset($_GET['op'])) {
 
         case 2:
             ?>
-        <h1>Mostrar informacion de un articulo</h1>
-        <form name=f1 method=post action=#  enctype="multipart/form-data" >
-            <label for=id>id</label><input type=text name=id>
-                <input type=submit name=send  value=send>
-        </form>
-        <?php
-        if (isset($_POST['send'])):
+            <h1>Mostrar informacion de un articulo</h1>
+            <form name="f1" method="post" action="#"  enctype="multipart/form-data" >
+                <label for="id">id</label><input type="text" name="id">
+                <input type="submit" name="send"  value=Enviar>
+            </form>
+            <?php
+            if (!isset($_POST['send'])) return;
             $id = $_POST['id'];
-            $article = DaoArticles::read($id);
-        ?>
-            <p>Nif <?=$article->getNif()?></p>
-            <p>Nombre <?=$article->getNombre()?></p>
-            <p>Apellido1 <?=$article->getApellido1()?></p>
-            <p>Apellido2 <?=$article->getApellido2()?></p>
+            $article = DaoArticle::read($id);
+            ?>
+            <p>id <?=$article->getNif()?></p>
+            <p>nombre <?=$article->getNombre()?></p>
+            <p>marca <?=$article->getApellido1()?></p>
+            <p>modelo <?=$article->getApellido2()?></p>
+            <p>precio <?=$article->getApellido2()?></p>
+            <p>familia <?=$article->getApellido2()?></p>
             <p>Imagen <img src='data:image/jpeg;base64, <?=$article->getImagen()?>'></p>
             <p>tipo <?=$article->getTipo()?></p>
 
-        <?php
-        endif;
+            <?php
         break;
 
         case 3:
             ?>
-        <h1>Eliminar cliente</h1>
+        <h1>Eliminar artiiculo</h1>
         <form name=f1 method=post action=#  enctype="multipart/form-data" >
-            <label for=id>Nif</label><input type=text name=id>
-            <input type=submit name=send  value=Send>
+            <label for="id">Id</label><input type="text" name="id">
+            <input type="submit" name="send"  value=Send>
         </form>
         <?php
-if (isset($_POST['send'])) {
-                $id = $_POST['id'];
-                DaoArticles::delete("$id");
-            }
-            break;
+        if (!isset($_POST['send'])) return;
+
+        $id = $_POST['id'];
+        DaoArticle::delete("$id");
+        
+        break;
 
         case 4:
             ?>
-        <h1>Actualizar cliente</h1>
-        <form name=f1 method=post action=#  enctype="multipart/form-data" >
+        <h1>Actualizar articulo</h1>
+        <form name="f1" method="post" action=#  enctype="multipart/form-data" >
             <div>
-                <label for=id>Nif </label>
-                <input type=text name=id>
+                <label for="id">Id </label>
+                <input type="text" name="id">
             </div>
             <div>
-                <input type=submit name=send  value=Enviar>
+                <input type="submit" name="send"  value=Enviar>
             </div>
         </form>
         <?php
-if (isset($_POST['send'])) {
-                $id = $_POST['id'];
-                $article = DaoArticles::read($id);
-                ?>
-        <form name=f1 method=post action=#  enctype="multipart/form-data" >
+        if (!isset($_POST['send'])) return;
+
+        $id = $_POST['id'];
+        $article = DaoArticle::read($id);
+        ?>
+        <form name=f1 method="post" action="#"  enctype="multipart/form-data" >
             <div>
-                <label for=id>Nif: </label>
-                <input type=text name=id value=<?=$article->getNif();?>>
+                <label for="id">Id: </label>
+                <input type="text" name="id" value=<?=$article->getNif();?>>
             </div>
             <div>
-                <label for=nombre>Nombre: </label>
-                <input type=text name=nombre value=<?=$article->getNombre();?>>
+                <label for="nombre">Nombre: </label>
+                <input type="text" name="nombre" value=<?=$article->getNombre();?>>
             </div>
             <div>
-                <label for=apellido1>Apellido1: </label>
-                <input type=text name=apellido1 value=<?=$article->getApellido1();?>>
+                <label for="marca">Marca: </label>
+                <input type="text" name="marca" value=<?=$article->getApellido1();?>>
             </div>
             <div>
-                <label for=apellido2>Apellido2: </label>
-                <input type=text name=apellido2 value=<?=$article->getApellido2();?>>
+                <label for="modelo">Modelo: </label>
+                <input type="text" name="modelo" value=<?=$article->getApellido2();?>>
             </div>
             <div>
-                <label for=foto>foto: </label>
+                <label for="precio">Precio: </label>
+                <input type="text" name="precio" value=<?=$article->getApellido2();?>>
+            </div>
+            <div>
+                <label for="familia">Familia: </label>
+                <input type="text" name="familia" value=<?=$article->getApellido2();?>>
+            </div>
+            <div>
+                <label for="foto">foto: </label>
                 <img src='data:image/jpeg;base64, <?=$article->getImagen()?>'>
-                <input type="file" name=foto>
+                <input type="file" name="foto">
             </div>
             <div>
-                <label for=tipo>Tipo: </label>
-                <input type=text name=tipo value=<?=$article->getTipo()?>>
+                <label for="tipo">Tipo: </label>
+                <input type="text" name="tipo" value=<?=$article->getTipo()?>>
             </div>
             <div>
-                <input type=submit name=actualizar  value=Actualizar>
+                <input type="submit" name="update"  value="Actualizar">
             </div>
         </form>
         <?php
-if (isset($_POST['actualizar'])) {
-                    $id = $_POST['id'];
-                    $nombre = $_POST['nombre'];
-                    $apellido1 = $_POST['apellido1'];
-                    $apellido2 = $_POST['apellido2'];
-                    $tipo = $_POST['tipo'];
+        if (!isset($_POST['update'])) return;
 
-                    $rutaTemp = $_FILES['foto']['tmp_name'];
-                    $campos = explode(".", $_FILES['foto']['name']);
-                    $tipoImagen = $campos[1];
-                    $tam = $_FILES['foto']['size'];
+        $id = $_POST['id'];
+        $nombre = $_POST['nombre'];
+        $marca = $_POST['marca'];
+        $modelo = $_POST['modelo'];
+        $precio = $_POST['precio'];
+        $familia = $_POST['familia'];
+        $tipo = $_POST['tipo'];
 
-                    $imagen = base64_encode(file_get_contents($rutaTemp));
-                    $article = new Client("$id", "$nombre", "$apellido1", "$apellido2", "$imagen", "$tipo");
-                    DaoArticles::update($article);
-                }
-            }
-            break;
+        $rutaTemp = $_FILES['foto']['tmp_name'];
+        $campos = explode(".", $_FILES['foto']['name']);
+        $tipoImagen = $campos[1];
+        $tam = $_FILES['foto']['size'];
+
+        $imagen = base64_encode(file_get_contents($rutaTemp));
+        $article = new Article("$id", "$nombre", "$marca", "$modelo", "$imagen", "$tipo");
+        DaoArticle::update($article);
+        
+        break;
 
         case 5:
             ?>
-        <h1>Insertar cliente</h1>
+        <h1>Insertar articulo</h1>
         <form name=f1 method=post action=#  enctype="multipart/form-data" >
             <div>
-                <label for=id>Nif</label>
-                <input type=text name=id>
+                <label for="id">Id</label>
+                <input type="text" name="id">
             </div>
             <div>
-                <label for=nombre>Nombre</label>
-                <input type=text name=nombre>
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre">
             </div>
             <div>
-                <label for=apellido1>Apellido1</label>
-                <input type=text name=apellido1>
+                <label for="marca">Marca</label>
+                <input type="text" name="marca">
             </div>
             <div>
-                <label for=apellido2>Apellido2</label>
-                <input type=text name=apellido2>
+                <label for="modelo">Modelo</label>
+                <input type="text" name="modelo">
+            </div>
+            <div>
+                <label for="precio">Precio</label>
+                <input type="text" name="precio">
+            </div>
+            <div>
+                <label for="familia">Familia</label>
+                <input type="text" name="modelo">
             </div>
             <div>
                 <label for=foto>Foto</label>
@@ -194,23 +215,24 @@ if (isset($_POST['actualizar'])) {
         </form>
 
         <?php
-if (isset($_POST['send'])) {
-                $id = $_POST['id'];
-                $nombre = $_POST['nombre'];
-                $apellido1 = $_POST['apellido1'];
-                $apellido2 = $_POST['apellido2'];
+        if (!isset($_POST['send'])) return
+        
+        $id = $_POST['id'];
+        $nombre = $_POST['nombre'];
+        $marca = $_POST['marca'];
+        $modelo = $_POST['modelo'];
 
-                $rutaTemp = $_FILES['foto']['tmp_name'];
-                $campos = explode(".", $_FILES['foto']['name']);
-                $tipo = $campos[1];
-                $tam = $_FILES['foto']['size'];
+        $rutaTemp = $_FILES['foto']['tmp_name'];
+        $campos = explode(".", $_FILES['foto']['name']);
+        $tipo = $campos[1];
+        $tam = $_FILES['foto']['size'];
 
-                $imagen = base64_encode(file_get_contents($rutaTemp));
+        $imagen = base64_encode(file_get_contents($rutaTemp));
 
-                $article = new Client("$id", "$nombre", "$apellido1", "$apellido2", "$imagen", "$tipo");
-                DaoArticles::create($article);
-            }
-            break;
+        $article = new Article("$id", "$nombre", "$marca", "$modelo", "$imagen", "$tipo");
+        DaoArticle::create($article);
+        break;
+        
         default:
             echo "Seleccione una opción del menú";
             break;

@@ -1,70 +1,65 @@
 <?php
 
-require_once 'Client.php';
-require_once 'Database.php';
+include dirname(__FILE__) . '/Article.php';
+include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
 
-class DaoClient
+class DaoArticle
 {
-    const TABLE = 'clientes';
+    const TABLE = 'articulos';
 
     public function __construct()
     {
     }
 
-    /**
-     * @param Client $object
-     * @return void
-     */
-    public static function create($object)
+    public static function create($article)
     {
-        $db = Database::getInstance();
-        $query = 'INSERT INTO ' . DaoClient::TABLE . '
-        (NIF, Nombre, Apellido1, Apellido2, Imagen, Tipo)
-        VALUES (:nif, :nombre, :apellido1, :apellido2, :imagen, :tipo)';
 
+        $db = connect();
+        
         $params = [
-            ":nif" => $object->getNif(),
-            ":nombre" => $object->getNombre(),
-            ":apellido1" => $object->getApellido1(),
-            ":apellido2" => $object->getApellido2(),
-            ":imagen" => $object->getImagen(),
-            ":tipo" => $object->getTipo(),
+            $article->getProperty('id'),
+            $article->getProperty('nombre'),
+            $article->getProperty('marca'),
+            $article->getProperty('modelo'),
+            $article->getProperty('precio'),
+            $article->getProperty('familia'),
+            $article->getProperty('imagen'),
+            $article->getProperty('tipo'),
         ];
+        $db->insert('Id, Nombre, Marca, Modelo, Precio, Familia, Imagen, Tipo', $params);
+
+        $articles = $db->readAll();
+
         $db->queryExec($query, $params);
     }
 
-    /**
-     * @param $id
-     * @return Client
-     */
-    public static function read($id)
+    public static function read($idTable, $value)
     {
-        $db = Database::getInstance();
-        $query = 'SELECT * FROM ' . DaoClient::TABLE . ' WHERE NIF=:cod';
-        $params = [
-            ':cod' => $id,
-        ];
-        $result = $db->queryExec($query, $params);
-        $clie = new Client(
-            $result[0]['NIF'],
-            $result[0]['Nombre'],
-            $result[0]['Apellido1'],
-            $result[0]['Apellido2'],
-            $result[0]['Imagen'],
-            $result[0]['Tipo']
+
+        $db = connect();
+        $db->read($idTable, $value);
+        $articles = $db->readAll();
+
+        $article = new Article(
+            $articles[0]['Id'],
+            $articles[0]['Nombre'],
+            $articles[0]['Marca'],
+            $articles[0]['Modelo'],
+            $articles[0]['Precio'],
+            $articles[0]['Familia'],
+            $articles[0]['Imagen'],
+            $articles[0]['Tipo']
         );
-        return $clie;
+        return $article;
     }
 
-    /**
-     * @return Client []
-     */
     public static function readAll()
     {
-        $db = Database::getInstance();
-        $query = 'SELECT * FROM ' . DaoClient::TABLE;
+        $db = connect();
+        
+        $query = 'SELECT * FROM ' . DaoArticle::TABLE;
         $result = $db->queryExec($query);
-        $objects = [];
+        $articles = [];
         foreach ($result as $item) {
             $clie = new Client(
                 $item['NIF'],
@@ -74,29 +69,29 @@ class DaoClient
                 $item['Imagen'],
                 $item['Tipo']
             );
-            array_push($objects, $clie);
+            array_push($articles, $clie);
         }
-        return $objects;
+        return $articles;
     }
 
     /**
-     * @param Client $object
+     * @param Client $article
      */
-    public static function update($object)
+    public static function update($article)
     {
         $db = Database::getInstance();
-        $query = 'UPDATE ' . DaoClient::TABLE . ' SET
+        $query = 'UPDATE ' . DaoArticle::TABLE . ' SET
         NIF = :nif, Nombre = :nombre, Apellido1 = :apellido1, Apellido2 = :apellido2,
         Imagen = :imagen, Tipo = :tipo
         WHERE NIF = :nif';
 
         $params = [
-            ":nif" => $object->getNif(),
-            ":nombre" => $object->getNombre(),
-            ":apellido1" => $object->getApellido1(),
-            ":apellido2" => $object->getApellido2(),
-            ":imagen" => $object->getImagen(),
-            ":tipo" => $object->getTipo(),
+            ":nif" => $article->getNif(),
+            ":nombre" => $article->getNombre(),
+            ":apellido1" => $article->getApellido1(),
+            ":apellido2" => $article->getApellido2(),
+            ":imagen" => $article->getImagen(),
+            ":tipo" => $article->getTipo(),
         ];
         $db->queryExec($query, $params);
     }
@@ -107,10 +102,15 @@ class DaoClient
     public static function delete($id)
     {
         $db = Database::getInstance();
-        $query = 'DELETE FROM ' . DaoClient::TABLE . ' WHERE NIF=:cod';
+        $query = 'DELETE FROM ' . DaoArticle::TABLE . ' WHERE NIF=:cod';
         $params = [
             ':cod' => $id,
         ];
         $db->queryExec($query, $params);
+    }
+
+    private function connect() {
+        $db = new DataBasePDO();
+        $db->setTable(DaoArticle::TABLE);
     }
 }

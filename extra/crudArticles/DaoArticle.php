@@ -88,17 +88,10 @@ class DaoArticle
         $db->queryExec($query, $params);
     }
 
-    /**
-     * @param $id
-     */
-    public static function delete($id)
+    public static function delete($idTable, $value)
     {
-        $db = Database::getInstance();
-        $query = 'DELETE FROM ' . DaoArticle::TABLE . ' WHERE NIF=:cod';
-        $params = [
-            ':cod' => $id,
-        ];
-        $db->queryExec($query, $params);
+        $db = connect();
+        $db->remove($idTable, $value);        
     }
 
     private function connect() {

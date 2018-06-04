@@ -13,7 +13,6 @@ class DaoArticle
 
     public static function create($article)
     {
-
         $db = connect();
         
         $params = [
@@ -26,57 +25,50 @@ class DaoArticle
             $article->getProperty('imagen'),
             $article->getProperty('tipo'),
         ];
+
         $db->insert('Id, Nombre, Marca, Modelo, Precio, Familia, Imagen, Tipo', $params);
-
-        $articles = $db->readAll();
-
-        $db->queryExec($query, $params);
+        $article = $db->readAll();
     }
 
     public static function read($idTable, $value)
     {
-
         $db = connect();
         $db->read($idTable, $value);
-        $articles = $db->readAll();
+        $article = $db->readAll();
 
-        $article = new Article(
-            $articles[0]['Id'],
-            $articles[0]['Nombre'],
-            $articles[0]['Marca'],
-            $articles[0]['Modelo'],
-            $articles[0]['Precio'],
-            $articles[0]['Familia'],
-            $articles[0]['Imagen'],
-            $articles[0]['Tipo']
+        return new Article(
+            $article['Id'],
+            $article['Nombre'],
+            $article['Marca'],
+            $article['Modelo'],
+            $article['Precio'],
+            $article['Familia'],
+            $article['Imagen'],
+            $article['Tipo']
         );
-        return $article;
     }
 
     public static function readAll()
     {
         $db = connect();
-        
-        $query = 'SELECT * FROM ' . DaoArticle::TABLE;
-        $result = $db->queryExec($query);
+        $results = $db->readAll();
         $articles = [];
-        foreach ($result as $item) {
-            $clie = new Client(
-                $item['NIF'],
-                $item['Nombre'],
-                $item['Apellido1'],
-                $item['Apellido2'],
-                $item['Imagen'],
-                $item['Tipo']
-            );
-            array_push($articles, $clie);
-        }
+
+        foreach ($results as $article) {
+            array_push($articles, new Article(
+                $article['Id'],
+                $article['Nombre'],
+                $article['Marca'],
+                $article['Modelo'],
+                $article['Precio'],
+                $article['Familia'],
+                $article['Imagen'],
+                $article['Tipo']
+            ));
         return $articles;
+        }
     }
 
-    /**
-     * @param Client $article
-     */
     public static function update($article)
     {
         $db = Database::getInstance();

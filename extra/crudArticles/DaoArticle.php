@@ -14,7 +14,7 @@ class DaoArticle
     public static function create($article)
     {
         $db = connect();
-        
+
         $params = [
             $article->getProperty('id'),
             $article->getProperty('nombre'),
@@ -65,36 +65,44 @@ class DaoArticle
                 $article['Imagen'],
                 $article['Tipo']
             ));
-        return $articles;
+            return $articles;
         }
     }
 
     public static function update($article)
     {
-        $db = Database::getInstance();
-        $query = 'UPDATE ' . DaoArticle::TABLE . ' SET
-        NIF = :nif, Nombre = :nombre, Apellido1 = :apellido1, Apellido2 = :apellido2,
-        Imagen = :imagen, Tipo = :tipo
-        WHERE NIF = :nif';
+
+        $db = connect();
+        // $query = 'UPDATE ' . DaoArticle::TABLE . ' SET
+        // NIF = :nif, Nombre = :nombre, Apellido1 = :apellido1, Apellido2 = :apellido2,
+        // Imagen = :imagen, Tipo = :tipo
+        // WHERE NIF = :nif';
 
         $params = [
-            ":nif" => $article->getNif(),
-            ":nombre" => $article->getNombre(),
-            ":apellido1" => $article->getApellido1(),
-            ":apellido2" => $article->getApellido2(),
-            ":imagen" => $article->getImagen(),
-            ":tipo" => $article->getTipo(),
+            $article->getProperty('id'),
+            $article->getProperty('nombre'),
+            $article->getProperty('marca'),
+            $article->getProperty('modelo'),
+            $article->getProperty('precio'),
+            $article->getProperty('familia'),
+            $article->getProperty('imagen'),
+            $article->getProperty('tipo'),
         ];
-        $db->queryExec($query, $params);
+        $db->update(
+            ['Id', 'Nombre', 'Marca', 'Modelo', 'Precio', 'Familia', 'Imagen', 'Tipo']
+            , $params
+        );
+
     }
 
     public static function delete($idTable, $value)
     {
         $db = connect();
-        $db->remove($idTable, $value);        
+        $db->remove($idTable, $value);
     }
 
-    private function connect() {
+    private function connect()
+    {
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
     }

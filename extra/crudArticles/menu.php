@@ -114,7 +114,7 @@ if (isset($_GET['op'])) {
             <?php
             if (!isset($_POST['send'])) return;
 
-            DaoArticle::delete($_POST['id']);
+            DaoArticle::delete('Id', $_POST['id']);
         break;
 
         case 4:
@@ -133,6 +133,7 @@ if (isset($_GET['op'])) {
         if (!isset($_POST['send'])) return;
 
         $article = DaoArticle::read($_POST['id']);
+        echo "Articulo borrado correctamente";
         ?>
         <form name=f1 method="post" action="#"  enctype="multipart/form-data" >
             <div>
@@ -198,10 +199,10 @@ if (isset($_GET['op'])) {
             ?>
         <h1>Insertar articulo</h1>
         <form name=f1 method=post action=#  enctype="multipart/form-data" >
-            <div>
+            <!-- <div>
                 <label for="id">Id</label>
                 <input type="text" name="id">
-            </div>
+            </div> -->
             <div>
                 <label for="nombre">Nombre</label>
                 <input type="text" name="nombre">
@@ -220,7 +221,7 @@ if (isset($_GET['op'])) {
             </div>
             <div>
                 <label for="familia">Familia</label>
-                <input type="text" name="modelo">
+                <input type="text" name="familia">
             </div>
             <div>
                 <label for=foto>Foto</label>
@@ -232,15 +233,14 @@ if (isset($_GET['op'])) {
         </form>
 
         <?php
-        if (!isset($_POST['send'])) return
+        if (!isset($_POST['send'])) return;
         
-        $id = $_POST['id'];
+        // $id = $_POST['id'];
         $nombre = $_POST['nombre'];
         $marca = $_POST['marca'];
         $modelo = $_POST['modelo'];
         $precio = $_POST['precio'];
         $familia = $_POST['familia'];
-        $tipo = $_POST['tipo'];
 
         $rutaTemp = $_FILES['foto']['tmp_name'];
         $campos = explode(".", $_FILES['foto']['name']);
@@ -249,7 +249,7 @@ if (isset($_GET['op'])) {
 
         $imagen = base64_encode(file_get_contents($rutaTemp));
 
-        $article = new Article("$id", "$nombre", "$marca", "$modelo", "$imagen", "$tipo");
+        $article = new Article(null, "$nombre", "$marca", "$modelo", "$precio", "$familia", "$imagen", "$tipo");
         DaoArticle::create($article);
         break;
         

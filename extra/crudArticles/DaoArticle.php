@@ -36,18 +36,17 @@ class DaoArticle
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
 
-        $db->read($idTable, $value);
-        $article = $db->readAll();
+        $article = $db->read($idTable, $value);
 
         return new Article(
-            $article['Id'],
-            $article['Nombre'],
-            $article['Marca'],
-            $article['Modelo'],
-            $article['Precio'],
-            $article['Familia'],
-            $article['Imagen'],
-            $article['Tipo']
+            $article[0]['Id'],
+            $article[0]['Nombre'],
+            $article[0]['Marca'],
+            $article[0]['Modelo'],
+            $article[0]['Precio'],
+            $article[0]['Familia'],
+            $article[0]['Imagen'],
+            $article[0]['Tipo']
         );
     }
 
@@ -70,8 +69,8 @@ class DaoArticle
                 $article['Imagen'],
                 $article['Tipo']
             ));
-            return $articles;
         }
+        return $articles;        
     }
 
     public static function update($article)

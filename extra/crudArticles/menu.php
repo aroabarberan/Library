@@ -3,8 +3,8 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-include dirname(__FILE__) . '/Article.php';
 include dirname(__FILE__) . '/DaoArticle.php';
+include dirname(__FILE__) . '/Article.php';
 include dirname(__FILE__) . '/../../Images/Image.php';
 ?>
 <style>
@@ -15,11 +15,11 @@ img {
 </style>
 <h1>Articles</h1>
 <ol>
-    <li><a href='menuPrincipal.php?op=1'>Listar en una tabla HTML todos los Articulos</a></li>
-    <li><a href='menuPrincipal.php?op=2'>Buscar Articulo por id y mostrar todos sus datos</a></li>
-    <li><a href='menuPrincipal.php?op=3'>Borrar un articulo introduciendo su Id</a></li>
-    <li><a href='menuPrincipal.php?op=4'>Editar los datos del articulo</a></li>
-    <li><a href='menuPrincipal.php?op=5'>Insertar un nuevo articulo</a></li>
+    <li><a href='menu.php?op=1'>Listar en una tabla HTML todos los Articulos</a></li>
+    <li><a href='menu.php?op=2'>Buscar Articulo por id y mostrar todos sus datos</a></li>
+    <li><a href='menu.php?op=3'>Borrar un articulo introduciendo su Id</a></li>
+    <li><a href='menu.php?op=4'>Editar los datos del articulo</a></li>
+    <li><a href='menu.php?op=5'>Insertar un nuevo articulo</a></li>
 </ol>
 
 <?php
@@ -29,34 +29,36 @@ if (isset($_GET['op'])) {
         case 1:
             $articles = DaoArticle::readAll();
             ?>
-        <h1>Todos los articulos</h1>
-        <table border='2'>
-            <tr>
-                <td>Id</td>
-                <td>Nombre</td>
-                <td>Marca</td>
-                <td>Modelo</td>
-                <td>Precio</td>
-                <td>Familia</td>
-                <td>Imagen</td>
-                <td>Tipo</td>
-            </tr>
-            <?php foreach ($articles as $article): ?>
+            <h1>Todos los articulos</h1>
+            <table border='2'>
                 <tr>
-                    <td><?=$article->getNif()?></td>
-                    <td><?=$article->getNombre()?></td>
-                    <td><?=$article->getApellido1()?></td>
-                    <td><?=$article->getApellido2()?></td>
-                    <?php
-                    $string = base64_decode($article->getImagen());
-                    $image = Image::modeloeImageFromString($string);
-                    $image->writeTextInImage('STOCK', 50, 50, $image->getColorRed(), -40, 50);
-                    ?>
-                    <td><img src='<?=$image->getSrc();?>'></td>
-                    <td><?=$article->getTipo()?></td>
+                    <td>Id</td>
+                    <td>Nombre</td>
+                    <td>Marca</td>
+                    <td>Modelo</td>
+                    <td>Precio</td>
+                    <td>Familia</td>
+                    <td>Imagen</td>
+                    <td>Tipo</td>
                 </tr>
-            <?php endforeach;?>
-        </table>
+                <?php foreach ($articles as $article): ?>
+                    <tr>
+                        <td><?= $article->getProperty('id') ?></td>
+                        <td><?= $article->getProperty('nombre') ?></td>
+                        <td><?= $article->getProperty('marca') ?></td>
+                        <td><?= $article->getProperty('modelo') ?></td>
+                        <td><?= $article->getProperty('precio') ?></td>
+                        <td><?= $article->getProperty('familia') ?></td>
+                        <?php
+                            $string = base64_decode($article->getProperty('imagen'));
+                            $image = Image::createImageFromString($string);
+                            // $image->writeTextInImage('STOCK', 50, 50, $image->getColorRed(), -40, 50);
+                        ?>
+                        <td><img src='<?= $image->getSrc(); ?>'></td>                        
+                        <td><?= $article->getProperty('tipo') ?></td>
+                    </tr>
+                <?php endforeach;?>
+            </table>
         <?php
         break;
 
@@ -64,39 +66,55 @@ if (isset($_GET['op'])) {
             ?>
             <h1>Mostrar informacion de un articulo</h1>
             <form name="f1" method="post" action="#"  enctype="multipart/form-data" >
-                <label for="id">id</label><input type="text" name="id">
+                <label for="id">Id </label><input type="text" name="id">
                 <input type="submit" name="send"  value=Enviar>
             </form>
             <?php
             if (!isset($_POST['send'])) return;
-            $id = $_POST['id'];
-            $article = DaoArticle::read($id);
+            
+            $article = DaoArticle::read('Id', $_POST['id']);
             ?>
-            <p>id <?=$article->getNif()?></p>
-            <p>nombre <?=$article->getNombre()?></p>
-            <p>marca <?=$article->getApellido1()?></p>
-            <p>modelo <?=$article->getApellido2()?></p>
-            <p>precio <?=$article->getApellido2()?></p>
-            <p>familia <?=$article->getApellido2()?></p>
-            <p>Imagen <img src='data:image/jpeg;base64, <?=$article->getImagen()?>'></p>
-            <p>tipo <?=$article->getTipo()?></p>
-
+            <table border='2'>
+                <tr>
+                    <td>Id</td>
+                    <td>Nombre</td>
+                    <td>Marca</td>
+                    <td>Modelo</td>
+                    <td>Precio</td>
+                    <td>Familia</td>
+                    <td>Imagen</td>
+                    <td>Tipo</td>
+                </tr>
+                <tr>
+                    <td><?= $article->getProperty('id') ?></td>
+                    <td><?= $article->getProperty('nombre') ?></td>
+                    <td><?= $article->getProperty('marca') ?></td>
+                    <td><?= $article->getProperty('modelo') ?></td>
+                    <td><?= $article->getProperty('precio') ?></td>
+                    <td><?= $article->getProperty('familia') ?></td>
+                    <?php
+                        $string = base64_decode($article->getProperty('imagen'));
+                        $image = Image::createImageFromString($string);
+                        // $image->writeTextInImage('STOCK', 50, 50, $image->getColorRed(), -40, 50);
+                    ?>
+                    <td><img src='<?= $image->getSrc(); ?>'></td>                        
+                    <td><?= $article->getProperty('tipo') ?></td>
+                </tr>
+            </table>
             <?php
         break;
 
         case 3:
             ?>
-        <h1>Eliminar artiiculo</h1>
-        <form name=f1 method=post action=#  enctype="multipart/form-data" >
-            <label for="id">Id</label><input type="text" name="id">
-            <input type="submit" name="send"  value=Send>
-        </form>
-        <?php
-        if (!isset($_POST['send'])) return;
+            <h1>Eliminar articulo</h1>
+            <form name=f1 method=post action=#  enctype="multipart/form-data" >
+                <label for="id">Id</label><input type="text" name="id">
+                <input type="submit" name="send"  value=Send>
+            </form>
+            <?php
+            if (!isset($_POST['send'])) return;
 
-        $id = $_POST['id'];
-        DaoArticle::delete("$id");
-        
+            DaoArticle::delete($_POST['id']);
         break;
 
         case 4:
@@ -114,42 +132,41 @@ if (isset($_GET['op'])) {
         <?php
         if (!isset($_POST['send'])) return;
 
-        $id = $_POST['id'];
-        $article = DaoArticle::read($id);
+        $article = DaoArticle::read($_POST['id']);
         ?>
         <form name=f1 method="post" action="#"  enctype="multipart/form-data" >
             <div>
                 <label for="id">Id: </label>
-                <input type="text" name="id" value=<?=$article->getNif();?>>
+                <input type="text" name="id" value=<?= $article->getProperty('id'); ?>>
             </div>
             <div>
                 <label for="nombre">Nombre: </label>
-                <input type="text" name="nombre" value=<?=$article->getNombre();?>>
+                <input type="text" name="nombre" value=<?= $article->getProperty('nombre'); ?>>
             </div>
             <div>
                 <label for="marca">Marca: </label>
-                <input type="text" name="marca" value=<?=$article->getApellido1();?>>
+                <input type="text" name="marca" value=<?= $article->getProperty('marca');?>>
             </div>
             <div>
                 <label for="modelo">Modelo: </label>
-                <input type="text" name="modelo" value=<?=$article->getApellido2();?>>
+                <input type="text" name="modelo" value=<?= $article->getProperty('modelo'); ?>>
             </div>
             <div>
                 <label for="precio">Precio: </label>
-                <input type="text" name="precio" value=<?=$article->getApellido2();?>>
+                <input type="text" name="precio" value=<?= $article->getProperty('precio'); ?>>
             </div>
             <div>
                 <label for="familia">Familia: </label>
-                <input type="text" name="familia" value=<?=$article->getApellido2();?>>
+                <input type="text" name="familia" value=<?= $article->getProperty('familia')(); ?>>
             </div>
             <div>
                 <label for="foto">foto: </label>
-                <img src='data:image/jpeg;base64, <?=$article->getImagen()?>'>
+                <img src='data:image/jpeg;base64, <?= $article->getProperty('imagen') ?>'>
                 <input type="file" name="foto">
             </div>
             <div>
                 <label for="tipo">Tipo: </label>
-                <input type="text" name="tipo" value=<?=$article->getTipo()?>>
+                <input type="text" name="tipo" value=<?= $article->getProperty('tipo') ?>>
             </div>
             <div>
                 <input type="submit" name="update"  value="Actualizar">
@@ -172,7 +189,7 @@ if (isset($_GET['op'])) {
         $tam = $_FILES['foto']['size'];
 
         $imagen = base64_encode(file_get_contents($rutaTemp));
-        $article = new Article("$id", "$nombre", "$marca", "$modelo", "$imagen", "$tipo");
+        $article = new Article("$id", "$nombre", "$marca", "$modelo","$precio", "$familia", "$imagen", "$tipo");
         DaoArticle::update($article);
         
         break;
@@ -221,6 +238,9 @@ if (isset($_GET['op'])) {
         $nombre = $_POST['nombre'];
         $marca = $_POST['marca'];
         $modelo = $_POST['modelo'];
+        $precio = $_POST['precio'];
+        $familia = $_POST['familia'];
+        $tipo = $_POST['tipo'];
 
         $rutaTemp = $_FILES['foto']['tmp_name'];
         $campos = explode(".", $_FILES['foto']['name']);

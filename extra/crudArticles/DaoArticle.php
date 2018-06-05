@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__FILE__) . '/Article.php';
+include dirname(__FILE__) . 'Article.php';
 include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
 
 class DaoArticle
@@ -13,7 +13,8 @@ class DaoArticle
 
     public static function create($article)
     {
-        $db = connect();
+        $db = new DataBasePDO();
+        $db->setTable(DaoArticle::TABLE);
 
         $params = [
             $article->getProperty('id'),
@@ -32,7 +33,9 @@ class DaoArticle
 
     public static function read($idTable, $value)
     {
-        $db = connect();
+        $db = new DataBasePDO();
+        $db->setTable(DaoArticle::TABLE);
+
         $db->read($idTable, $value);
         $article = $db->readAll();
 
@@ -50,7 +53,9 @@ class DaoArticle
 
     public static function readAll()
     {
-        $db = connect();
+        $db = new DataBasePDO();
+        $db->setTable(DaoArticle::TABLE);
+    
         $results = $db->readAll();
         $articles = [];
 
@@ -72,11 +77,8 @@ class DaoArticle
     public static function update($article)
     {
 
-        $db = connect();
-        // $query = 'UPDATE ' . DaoArticle::TABLE . ' SET
-        // NIF = :nif, Nombre = :nombre, Apellido1 = :apellido1, Apellido2 = :apellido2,
-        // Imagen = :imagen, Tipo = :tipo
-        // WHERE NIF = :nif';
+        $db = new DataBasePDO();
+        $db->setTable(DaoArticle::TABLE);
 
         $params = [
             $article->getProperty('id'),
@@ -97,13 +99,8 @@ class DaoArticle
 
     public static function delete($idTable, $value)
     {
-        $db = connect();
-        $db->remove($idTable, $value);
-    }
-
-    private function connect()
-    {
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
+        $db->remove($idTable, $value);
     }
 }

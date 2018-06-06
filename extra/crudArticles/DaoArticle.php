@@ -14,19 +14,21 @@ class DaoArticle
     {
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
+        $query = 'INSERT INTO ' . DaoArticle::TABLE . '
+        (Id, Nombre, Marca, Modelo, Precio, Familia, Imagen, Tipo)
+        VALUES (:id, :nombre, :marca, :modelo, :precio, :familia, :imagen, :tipo)';
 
-        $db->insert('Id, Nombre, Marca, Modelo, Precio, Familia, Imagen, Tipo',
-            [
-                $article->getProperty('id'),
-                $article->getProperty('nombre'),
-                $article->getProperty('marca'),
-                $article->getProperty('modelo'),
-                $article->getProperty('precio'),
-                $article->getProperty('familia'),
-                $article->getProperty('imagen'),
-                $article->getProperty('tipo'),
-            ]
-        );
+        $params = [
+            ":id" => $article->getProperty('id'),
+            ":nombre" => $article->getProperty('nombre'),
+            ":marca" => $article->getProperty('marca'),
+            ":modelo" => $article->getProperty('modelo'),
+            ":precio" => $article->getProperty('precio'),
+            ":familia" => $article->getProperty('familia'),
+            ":imagen" => $article->getProperty('imagen'),
+            ":tipo" => $article->getProperty('tipo'),
+        ];
+        $db->query($query, $params);
     }
 
     public static function read($idTable, $value)
@@ -77,19 +79,22 @@ class DaoArticle
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
 
-        $db->update(
-            ['Id', 'Nombre', 'Marca', 'Modelo', 'Precio', 'Familia', 'Imagen', 'Tipo'],
-            [
-                $article->getProperty('id'),
-                $article->getProperty('nombre'),
-                $article->getProperty('marca'),
-                $article->getProperty('modelo'),
-                $article->getProperty('precio'),
-                $article->getProperty('familia'),
-                $article->getProperty('imagen'),
-                $article->getProperty('tipo'),
-            ]
-        );
+        $query = 'UPDATE ' . DaoArticle::TABLE . ' SET
+        Id = :id, Nombre = :nombre, Marca = :marca, Modelo = :modelo, 
+        Precio = :precio, Familia = :familia, Imagen = :imagen, Tipo = :tipo
+        WHERE Id = :id';
+
+        $params = [
+            ":id" => $article->getProperty('id'),
+            ":nombre" => $article->getProperty('nombre'),
+            ":marca" => $article->getProperty('marca'),
+            ":modelo" => $article->getProperty('modelo'),
+            ":precio" => $article->getProperty('precio'),
+            ":familia" => $article->getProperty('familia'),
+            ":imagen" => $article->getProperty('imagen'),
+            ":tipo" => $article->getProperty('tipo'),
+        ];
+        $db->query($query, $params);
     }
 
     public static function delete($idTable, $value)

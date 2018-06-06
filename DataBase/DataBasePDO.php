@@ -88,7 +88,6 @@ class DataBasePDO implements DB
     {
         $data = [];
         $result = $this->link->prepare($query);
-
         $success = $result->execute($params);
         if (!$success) {
             echo "<br>Error Query -> " . $result->errorInfo();
@@ -96,7 +95,7 @@ class DataBasePDO implements DB
         }
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $data[] = $row;
-        }
+        }  
         return $data;
     }
     public function setTable($table)

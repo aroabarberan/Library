@@ -1,6 +1,5 @@
 <?php
 
-include dirname(__FILE__) . 'Article.php';
 include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
 
 class DaoArticle
@@ -16,19 +15,18 @@ class DaoArticle
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
 
-        $params = [
-            $article->getProperty('id'),
-            $article->getProperty('nombre'),
-            $article->getProperty('marca'),
-            $article->getProperty('modelo'),
-            $article->getProperty('precio'),
-            $article->getProperty('familia'),
-            $article->getProperty('imagen'),
-            $article->getProperty('tipo'),
-        ];
-
-        $db->insert('Id, Nombre, Marca, Modelo, Precio, Familia, Imagen, Tipo', $params);
-        $article = $db->readAll();
+        $db->insert('Id, Nombre, Marca, Modelo, Precio, Familia, Imagen, Tipo',
+            [
+                $article->getProperty('id'),
+                $article->getProperty('nombre'),
+                $article->getProperty('marca'),
+                $article->getProperty('modelo'),
+                $article->getProperty('precio'),
+                $article->getProperty('familia'),
+                $article->getProperty('imagen'),
+                $article->getProperty('tipo'),
+            ]
+        );
     }
 
     public static function read($idTable, $value)
@@ -54,7 +52,7 @@ class DaoArticle
     {
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
-    
+
         $results = $db->readAll();
         $articles = [];
 
@@ -70,7 +68,7 @@ class DaoArticle
                 $article['Tipo']
             ));
         }
-        return $articles;        
+        return $articles;
     }
 
     public static function update($article)
@@ -79,21 +77,19 @@ class DaoArticle
         $db = new DataBasePDO();
         $db->setTable(DaoArticle::TABLE);
 
-        $params = [
-            $article->getProperty('id'),
-            $article->getProperty('nombre'),
-            $article->getProperty('marca'),
-            $article->getProperty('modelo'),
-            $article->getProperty('precio'),
-            $article->getProperty('familia'),
-            $article->getProperty('imagen'),
-            $article->getProperty('tipo'),
-        ];
         $db->update(
-            ['Id', 'Nombre', 'Marca', 'Modelo', 'Precio', 'Familia', 'Imagen', 'Tipo']
-            , $params
+            ['Id', 'Nombre', 'Marca', 'Modelo', 'Precio', 'Familia', 'Imagen', 'Tipo'],
+            [
+                $article->getProperty('id'),
+                $article->getProperty('nombre'),
+                $article->getProperty('marca'),
+                $article->getProperty('modelo'),
+                $article->getProperty('precio'),
+                $article->getProperty('familia'),
+                $article->getProperty('imagen'),
+                $article->getProperty('tipo'),
+            ]
         );
-
     }
 
     public static function delete($idTable, $value)

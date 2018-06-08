@@ -1,13 +1,19 @@
 <?php
 include dirname(__FILE__) . '/../../../DataBase/DataBasePDO.php';
 include dirname(__FILE__) . '/../../../Images/Image.php';
+
 include dirname(__FILE__) . '/../../../Cookies/Cookie.php';
 include dirname(__FILE__) . '/../../../Cookies/utilsCookie.php';
+
+include dirname(__FILE__) . '/../../../Dates/Convertion.php';
+include dirname(__FILE__) . '/../../../Dates/Date.php';
+include dirname(__FILE__) . '/../../../Dates/FamilyDate.php';
+
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
+
 session_start();
 // echo sha1("aroa");
-
 
 function locked($userName)
 {
@@ -19,14 +25,43 @@ function locked($userName)
                 order by Hora desc limit 3";
 
     $rows = $db->query($query, [":userName" => $userName]);
-    $cont = 1;
+    $cont = 0;
 
     foreach ($rows as $row) {
-        if ($row['acceso'] == "D") $cont++;
+        if ($row['acceso'] == "D") {
+            $cont++;
+        }
     }
-    if ($cont == 3) $locked = true;
+
+    if ($cont == 3) {
+        $locked = true;
+        if (!isset($_SESSION['login'])) {
+            $date = new Date($rows[2]['hora']);
+
+            $dateUnlock = FamilyDate::convertToSeconds(
+                $date->getYear(),
+                $date->getNumberMonth(),
+                $date->getDay(),
+                $date->getHour(),
+                $date->getMinute() + 5,
+                $date->getSeconds()
+            );
+            $dateTemp = new Date($dateUnlock);
+            $_SESSION['login'] = $dateTemp->getSecondsUnix();
+        }
+    }
+    if ($locked == true) {
+        if ((time() - $_SESSION['login']) > 300) {
+            $locked = false;
+        } else {
+            $time = getdate($_SESSION['login'] + 300);
+            echo "Está bloqueado hasta las " . $time['hours'] . ":" . $time['minutes'] . ":" . $time['seconds'];
+        }
+    }
+
     return $locked;
 }
+
 ?>
 
 <form name=f1 method="post" action=<?php echo $_SERVER['PHP_SELF'] ?>>
@@ -54,19 +89,22 @@ $time = time();
 $db = new DataBasePDO();
 $db->setTable('usuarios');
 $users = $db->readAll();
+$access = 'D';
 
-if (isLogin($users, $userName, $password)) {
-    $cookie = new Cookie('user', $userName);
-    $access = 'C';
-    $login = true;
-    header("location: articles.php");
+
+if (locked($userName)) {
+    echo "Esta bloqueado";
 } else {
-    $access = 'D';
-    $login = false;
-    echo "Login incorrecto";
+    echo "No esta bloqueado";
+    if (isLogin($users, $userName, $password)) {
+        $cookie = new Cookie('user', $userName);
+        $access = 'C';
+        header("location: articles.php");
+    } else {
+        $access = 'D';
+        echo "Login incorrecto<br>";
+    }
 }
-
-if (locked($userName) && !$login) header("Location: checkCaptcha.php");
 
 $query = "INSERT INTO logs VALUES (NULL, :userName, $time, '$access')";
 $db->query($query, [":userName" => $userName]);

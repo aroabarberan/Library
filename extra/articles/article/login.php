@@ -2,10 +2,10 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
-include dirname(__FILE__) . '/../../Images/Image.php';
-include dirname(__FILE__) . '/../../Cookies/Cookie.php';
-include dirname(__FILE__) . '/../../Cookies/utilsCookie.php';
+include dirname(__FILE__) . '/../../../DataBase/DataBasePDO.php';
+include dirname(__FILE__) . '/../../../Images/Image.php';
+include dirname(__FILE__) . '/../../../Cookies/Cookie.php';
+include dirname(__FILE__) . '/../../../Cookies/utilsCookie.php';
 
 session_start();
 // echo sha1("menganito");

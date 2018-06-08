@@ -12,16 +12,13 @@ echo "<h2>Productos seleccionados</h2>";
 
 $db = new DataBasePDO();
 $db->setTable('articulos');
-$articles= $_POST['arr'];
-$basket = $_SESSION['basket'];
+$articles = array_keys($_POST['arr']);
 
-foreach ($articles as $key=>$valor) {
-    if ( !isset($basket[$key])) {
-		$basket[$key]=1;
-	}		
+foreach ($articles as $key => $article) {
+    if (!isset($_SESSION['basket']) || !in_array($article, $_SESSION['basket'])) {
+        $_SESSION['basket'][$articles[$key]] = $article;
+    }
 }
-
-
 ?>
 <table border="2px"> 
     <tr>
@@ -37,7 +34,8 @@ foreach ($articles as $key=>$valor) {
     
     <?php
     $sum = 0;
-    foreach ($basket as $ar) {
+    
+    foreach ($_SESSION['basket'] as $ar) {
         ?>
         <tr>
             <?php

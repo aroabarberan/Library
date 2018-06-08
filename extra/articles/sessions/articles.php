@@ -11,13 +11,13 @@ if (!Cookie::isExists('user')) {
 $db = new DataBasePDO();
 $db->setTable('familias');
 $families = $db->readAll();
-//  onchange="f1.submit()";
+
 ?>
 <form action="logOut.php" method="post">
     <input type="submit" value="Log out" id="logOut">
 </form>
 
-<form action="" name='f1' id='f1' method="GET">
+<form action="" name='f1' id='f1' method="GET" onchange="f1.submit()">
     <div>
         <label for="family">Familias</label>
         <select name="family" id="family">
@@ -30,40 +30,15 @@ $families = $db->readAll();
             <?php endforeach;?>
         </select>
 
-        <select name="articlesPerPage" id="articlesPerPage">
-            <option value=""></option>
-            <?php for($i = 1; $i <= 10; $i++): ?>
-                    <option value="<?= $i ?>"
-                    <?php if(isset($_GET['articlesPerPage']) && $_GET['articlesPerPage'] == $i) echo 'selected';?>>
-                    <?= $i ?></option>
-            <?php endfor;?>
-        </select>
-
-        <input type="submit" value="Enviar" id="send" name="send">
+        <input type="hidden" value="Enviar" id="send" name="send">
     </div>
 </form>
 
 <?php
-if (!isset($_GET['send'])) return;
+if (!isset($_GET['family'])) return;
 
 $db->setTable('articulos');
-$totalArticles = $db->read('Familia', $_GET['family']);
-$articlesPerPage = $_GET['articlesPerPage'];
-
-
-if(isset($_GET['init'])) {
-    $page = $_GET['init'];
-    $init = 0 + $articlesPerPage;
-} else {
-    $page = 0;
-    $init = 0;
-}
-
-$articles = $db->query("SELECT * from articulos WHERE Familia=$_GET[family] LIMIT $init, $articlesPerPage");
-
-$size = count($totalArticles);
-$numberLinks = round($size / $articlesPerPage);
-
+$articles = $db->read('Familia', $_GET['family']);
 ?>
 <table border="2px"> 
     <tr>
@@ -95,11 +70,7 @@ $numberLinks = round($size / $articlesPerPage);
                 <td><?= $article['Familia'] ?></td>
                 <td><img src='<?=$image->getSrc();?>' style="width: 100px; hight: 100px;"></td>
                 <td><?= $article['Tipo'] ?></td>
-                <td>
-                    <input type="checkbox" name="arr[]" id="arr[]" 
-                    value="<?= $article['Id']?>"  
-                    <?php if(isset($_POST['arr']) && $_POST['arr'] ==  $articles['Id']) echo 'checked';?>>
-                </td>
+                <td><input type="checkbox" name="arr[<?= $article['Id']?>]" id="arr[<?= $article['Id']?>]"></td>
             </tr>
             <?php
         }
@@ -107,7 +78,3 @@ $numberLinks = round($size / $articlesPerPage);
 </table>        
         <input type="submit" value="Enviar" name="sendArticle" id="sendArticle">
     </form>
-
-<?php for ($i = 0; $i < $numberLinks; $i++): ?>
-    <a href="articles.php?family=<?= $_GET['family'] ?>&articlesPerPage=<?= $_GET['articlesPerPage'] ?>&send=Enviar&init=<?php echo $i + 1?>"> <?php echo $i +1 ?></a>
-<?php endfor; ?>

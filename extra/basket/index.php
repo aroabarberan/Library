@@ -53,7 +53,7 @@ $db->setTable('clientes');
 $clients = $db->readAll();
 $cont = 0;
 ?>
-<form name=f2 action=pedir.php method=post>
+<form name=f2 action=order.php method=post>
     <div>
         <label for="client">Cliente</label>
         <select name="client" id="client">
@@ -74,35 +74,18 @@ $cont = 0;
             <td>Stock</td>
             <td>Cantidad</td>
         </tr>
-        <?php foreach($rows as $row): ?>
+        <?php foreach($rows as $row):?>
             <tr>
-                <td><input type=checkbox name=pro[$cont] value=$fila[cod]></td>
+                <td><input type='checkbox' name=pro[<?= $cont ?>] value=<?= $row['cod'] ?>></td>
                 <td><?= $row['nombre_corto'] ?></td>
                 <td><?= $row['PVP'] ?></td>
-                <!-- <td><?= $fila['suma'] ?></td> -->
-                <td><input type="text" size="4" name="cant[$cont]"></td>
-                <input type=hidden name=stock[$cont] value=$fila[suma]>
-                <input type=hidden name=pvp[$cont] value=$fila[PVP]>";
+                <td><?= $row['suma'] ?></td>
+                <td><input type="text" size="4" name=cant[<?= $cont ?>]></td>
+                <input type="hidden" name=stock[<?= $cont ?>] value=<?= $row['suma'] ?>>
+                <input type="hidden" name=pvp[<?= $cont ?>] value=<?= $row['PVP'] ?>>
             </tr>
+            <?php $cont++; ?>
         <?php endforeach; ?>
     </table>
     <input type="submit" value="pedir">
 </form>
-<?php
-// $cont = 0;
-// echo "<table border=2>";
-// echo "<tr><td>Seleccionar</td><td>Nombre</td><td>Precio</td><td>Stock</td><td>Cantidad</td></tr>";
-// foreach ($rows as $fila) {
-//     echo "<tr>";
-//     echo "<td><input type=checkbox name=pro[$cont] value=$fila[cod]></td>
-//     <td>" . $fila['nombre_corto'] . "</td><td>" . $fila['PVP'] . "</td>
-//     <td>" . $fila['suma'] . "</td>
-//     <td><input type=text size=4 name=cant[$cont]></td>
-//     <input type=hidden name=stock[$cont] value=$fila[suma]>
-//     <input type=hidden name=pvp[$cont] value=$fila[PVP]>";
-//     echo "</tr>";
-//     $cont++;
-// }
-// echo "</table>";
-// echo "<input type=submit value=pedir>";
-// echo "</form>";

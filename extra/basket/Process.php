@@ -1,5 +1,4 @@
 <?php
-// include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
 
 class Process
 {
@@ -19,15 +18,15 @@ class Process
         $stores[$cod] = $stores[$cod] - 1;
         if ($stores[$cod] == 0) {
             unset($stores[$cod]);
-            $query = "DELETE FROM stock WHERE unidades=0";
-            $db->query($query, $params);
+            $query = "DELETE FROM stock WHERE unidades <= 0;";
+            $db->query($query);
         }
     }
     public static function getStore($cod)
     {
         $db = new DataBasePDO();
         $store = [];
-        $rows = $db->query("SELECT tienda FROM stock WHERE producto='$cod'");
+        $rows = $db->query("SELECT tienda, unidades FROM stock WHERE producto='$cod'");
         foreach ($rows as $row) {
             $store[$row['tienda']] = $row['unidades'];
         }
@@ -37,15 +36,15 @@ class Process
     public static function reduceStock($cod, $amount)
     {
         $db = new DataBasePDO();
-        $store = getStore($cod);
+        $store = Process::getStore($cod);
         list($tien, $unidades) = each($store);
         while ($amount > 0) {
             $query = "UPDATE stock SET unidades = (unidades-1) WHERE producto=:producto AND tienda=:tienda";
             $params= [":producto" => $cod, ":tienda" => $tien];
             $db->query($query, $params);
-            updateStore($store, $tien);
+            Process::updateStore($store, $tien);
             $amount--;
-            list($tien, $unidades) = nextStore($store, $tien);
+            list($tien, $unidades) = Process::nextStore($store, $tien);
 
         }
     }

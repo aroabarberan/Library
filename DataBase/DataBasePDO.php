@@ -91,6 +91,7 @@ class DataBasePDO implements DB
         $success = $result->execute($params);
         if (!$success) {
             echo "<br>Error Query -> " . $result->errorInfo();
+            echo "<pre>" .print_r($result->errorInfo(), true);
             return false;
         }
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

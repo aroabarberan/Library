@@ -7,7 +7,27 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<?php
+include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
+
+$db = new DataBasePDO();
+$db->setTable('contacts');
+$contacts = $db->readAll();
+?>
+
 <body>
+    <div>
+        <?php foreach ($contacts as $contact): ?>
+        <div>
+            Id: <?= $contact['id'] ?>
+            Name: <?= $contact['name'] ?>
+            Last Name: <?= $contact['lastName'] ?>
+            Email: <?= $contact['email'] ?>
+            Phone: <?= $contact['phone'] ?>
+        </div>
+        <?php endforeach; ?>
+        <p></p>
+    </div>
     <button id="addContact">Add contact</button>
 
 <div id="myModal" class="modal">
@@ -53,19 +73,20 @@
     }
 </script>
 <?php
-if (!isset($_POST['save'])) return;
+if (!isset($_POST['save'])) {
+    return;
+}
+$query = "INSERT INTO contacts (name, lastName, email, phone) VALUES (:name, :lastName, :email, :phone);";
 
-include dirname(__FILE__) . '/../../DataBase/DataBasePDO.php';
+$params = [
+    ":name" => $_POST['name'],
+    ":lastName" => $_POST['lastName'],
+    ":email" => $_POST['email'],
+    ":phone" => $_POST['phone'],
+];
 
-$db = new DataBasePDO();
-$db->setTable('contacts');
-$db->insert('id, name, lastName, email, phone', [
-    1,
-    $_POST['name'],
-    $_POST['lastName'],
-    $_POST['email'],
-    $_POST['phone']
-    ]);
+$db->query($query, $params);
+
 
 ?>
 
